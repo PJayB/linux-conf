@@ -12,6 +12,7 @@ list_available() {
 
 while [ -n "$1" ]; do
   case "$1" in
+  --debug)             do_gdb=yes ;;
   --list-versions|-l)  list_available ; exit 0 ;;
   --version|-v)        version="$2" ; shift ; shift ;;
   *)                   break ;;
@@ -40,11 +41,19 @@ if [ ! -x "$unitypath" ]; then
     exit 1
 fi
 
-gdb -q \
-    "-ex=handle SIGXCPU SIG33 SIG35 SIG36 SIG37 SIGPWR SIGPIPE nostop noprint" \
-    -ex=r \
-    --args \
-    "$unitypath" \
-    "$@" \
-    -projectpath "." \
-    -logfile -
+unity_args=(
+    "$unitypath"
+    "$@"
+    -projectpath "$(realpath .)"
+    -logfile - )
+
+if [ -n "$do_gdb" ]; then
+    gdb -q \
+        "-ex=handle SIGXCPU SIG33 SIG35 SIG36 SIG37 SIGPWR SIGPIPE nostop noprint" \
+        -ex=r \
+        --args \
+        "${unity_args[@]}"
+else
+    "${unity_args[@]}"
+fi
+
