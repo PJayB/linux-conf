@@ -42,5 +42,12 @@ configdir="$setupdir/config-templates"
 # Export PATH to toolsdir
 export PATH="$PATH:$toolsdir"
 
+# Disk space warning
+df -PT | grep -vE 'squashfs|tmpfs|/boot' | awk --posix '{
+    if ($5 == "0") {
+        print "\\e[1m\\e[97m\\e[41mWARNING: " $7 " is full\\e[0m"
+    }
+}'
+
 # Set up aliases
 source "$configdir/aliases"
