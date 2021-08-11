@@ -11,8 +11,8 @@ else
     alias xclip="xclip -selection c"
     alias neo="cmatrix"
 fi
-alias du='du -hs'
-alias df='df -h'
+alias duh='du -hs'
+alias dfh='df -h'
 alias rless="less -R"
 alias branch="git rev-parse --abbrev-ref HEAD"
 alias Rgrep="grep -RIsin --exclude-dir=.git"
