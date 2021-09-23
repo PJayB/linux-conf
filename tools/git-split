@@ -1,68 +1,258 @@
 #!/bin/bash
-flags=( )
-while [ -n "$1" ]; do
-    case "$1" in
-    --push|-p)      do_push=true ;;
-    --keep|-k)      do_keep=true ;;
-    --resume|-r)    do_resume=true ;;
-    --force|-f)     flags+=( "-f" ) ;;
-    *)              break ;;
-    esac
-    shift
-done
-
-commit_range="$1"
-branch="$2"
-base="$3"
+die() { echo "$*" >&2 ; exit 1 ; }
 
 usage() {
-    echo "Usage: $0 [--push] commit_range branch branch_base"
+    echo "$0 ... stuff"
 }
 
 usage_error() {
-    usage >&2
-    if [ -n "$*" ]; then
-        echo "Error: $*" >&2
-    fi
-    exit 1
+    die "$* (see --help)" >&2
 }
 
-set -e
-
-if [ -z "$do_resume" ]; then
-    if [ -z "$commit_range" ] || [ -z "$branch" ]; then
-        usage_error
-    fi
-
-    commit_range="$(git rev-parse "$commit_range" | sed 's/\^//g')"
-
+current_git_branch() {
+    local original_branch
     original_branch="$(git branch --show-current)"
     if [ -z "$original_branch" ]; then
         original_branch="$(git rev-parse HEAD)"
     fi
+    [ -n "$original_branch" ] || die "Failed to detect current branch"
+    echo "$original_branch"
+}
 
-    if [ -n "$base" ]; then
-        git checkout "${flags[@]}" -B "$branch" "$base"
-    else
-        git checkout "${flags[@]}" -b "$branch"
-    fi
+verify_current_git_branch() {
+    [ -n "$git_split_new_branch" ] || die "Missing new branch name"
+    [ "$(current_git_branch)" = "$git_split_new_branch" ] || die "Branches aren't in sync. Checkout $git_split_new_branch to resume."
+}
 
-    git cherry-pick "$commit_range"
-else
-    git cherry-pick --resume
-    echo "(Actually don't. Use '$0 --resume'.)"
-fi
+set_config() {
+    local key="$1"
+    shift
+    local value="$*"
+    case "$key" in
+        push)              git_split_push_branch="${value:-y}" ;;
+        force_push)        git_split_do_force_push="${value:-y}" ;;
+        remote)            git_split_push_remote="${value:-origin}" ;;
+        track)             git_split_track_remote="${value:-y}" ;;
+        keep_branch)       git_split_keep_branch="${value:-y}" ;;
+        original_branch)   git_split_original_branch="${value}" ;;
+        new_branch)        git_split_new_branch="${value}" ;;
+    esac
+}
 
-if [ -n "$do_push" ]; then
-    git push -u origin "$branch"
+print_config() {
+    echo "push=$git_split_push_branch"
+    echo "keep_branch=$git_split_keep_branch"
+    echo "force_push=$git_split_do_force_push"
+    echo "remote=$git_split_push_remote"
+    echo "track=$git_split_track_remote"
+    echo "original_branch=$git_split_original_branch"
+    echo "new_branch=$git_split_new_branch"
+}
 
-    if [ -z "$do_keep" ]; then
-        if [ -z "$original_branch" ]; then
-            echo "Can't reset back to original branch -- lost state"
-        else
-            git checkout "$original_branch"
-            git branch --delete "$branch"
+write_config() {
+    [ -n "$splitConfig" ] || die "Config path not set"
+    print_config > "$splitConfig" || die "Failed to write config to $splitConfig"
+}
+
+read_config() {
+    [ -n "$splitConfig" ] || die "Config path not set"
+    [ -f "$splitConfig" ] || die "Unreadable config: $splitConfig"
+
+    # Parse the config
+    while IFS= read -r line
+    do
+        key="$(echo "$line" | cut -d'=' -f1)" || die "Malformed config in $splitConfig"
+        value="$(echo "$line" | cut -d'=' -f2-)" || die "Malformed config in $splitConfig"
+        if [ -n "$key" ]; then
+            set_config "$key" "$value"
         fi
-    fi
-fi
+    done <"$splitConfig"
+}
 
+do_abort_split() {
+    # Abort any existing cherry-pick
+    git cherry-pick --abort || :
+
+    # Try and switch back to the old branch if possible
+    if [ -n "$git_split_original_branch" ]; then
+        git checkout "$git_split_original_branch" || :
+    fi
+
+    # Clean up config file
+    rm -f "$splitConfig"
+}
+
+do_push_split() {
+    verify_current_git_branch
+    [ -n "$git_split_push_remote" ] || die "Missing push remote"
+
+    local push_params
+    [ -n "$git_split_do_force_push" ] && push_params+=( "-f" )
+    [ -n "$git_split_track_remote" ] && push_params+=( "-u" )
+    
+    # Push the branch to origin or wherever
+    git push "${push_params[@]}" "$git_split_push_remote" "$git_split_new_branch:$git_split_new_branch" \
+        || die "Failed to push $git_split_new_branch to $git_split_push_remote"
+
+    # Revert to the original branch
+    git checkout "$git_split_original_branch" || die "Failed to checkout original branch $git_split_original_branch"
+
+    # Delete the new branch
+    if [ -z "$git_split_keep_branch" ]; then
+        git branch -- --force "$git_split_new_branch" || :
+    fi
+}
+
+do_finish_split() {
+    verify_current_git_branch
+    [ -n "$git_split_original_branch" ] || die "Missing original branch"
+
+    # push?
+    if [ -n "$git_split_push_branch" ]; then
+        do_push_split
+    else
+        echo "Done. Push using:"
+        echo "  git push ${push_params[@]} '$git_split_push_remote' '$git_split_new_branch:$git_split_new_branch'"
+    fi
+
+    # Clean up config file
+    rm -f "$splitConfig"
+}
+
+do_resume_split() {
+    local do_resume do_abort
+    while [ -n "$1" ]; do
+        case "$1" in
+        --resume|-r)    do_resume=y ;;
+        --abort)        do_abort=y ;;
+        --help)         usage ; exit 0 ;;
+        *)              usage_error "Unknown parameter '$1'";;
+        esac
+        shift
+    done
+
+    if [ -n "$do_resume" ] && [ -n "$do_abort" ]; then
+        usage_error "--resume and --abort are mutually exclusive."
+    fi
+    if [ -z "$do_resume" ] && [ -z "$do_abort" ]; then
+        usage_error "Looks like a split is in progress. Use --resume or --abort."
+    fi
+
+    if [ -n "$do_abort" ]; then
+        do_abort_split
+    else
+        # Load the config
+        read_config
+
+        # Check we're still on the right branch
+        verify_current_git_branch
+
+        # Resume the cherry-pick
+        git cherry-pick --resume || die "Failed to resume cherry-pick"
+
+        # Finalize
+        do_finish_split
+    fi
+}
+
+check_param() {
+    case "$2" in
+    -*|"")     usage_error "Expected parameter for '$1'" ;;
+    *)         : ;;
+    esac
+}
+
+do_init_split() {
+    # Parse the config
+    local do_stdin commit_range original_branch new_branch base_branch checkout_opts
+    while [ -n "$1" ]; do
+        case "$1" in
+        --keep|-k)          set_config "keep_branch" "y" ;;
+        --push|-p)          set_config "push" "y" ; set_config "keep_branch" "y" ;;
+        --force-push|-f)    set_config "push" "y" ; set_config "force_push" "y" ;;
+        --throwaway|-t)     set_config "push" "y" ;;
+        --track|-u)         set_config "push" "y" ; set_config "track" "y" ;;
+        --remote)           check_param "$1" "$2" ; set_config "remote" "$2" ; shift ;;
+        --base)             check_param "$1" "$2" ; base_branch="$2" ; shift ;;
+        --overwrite)        checkout_opts+=( "-f" ) ;;
+        --abort)            die "Nothing to abort." ;;
+        --resume)           die "Nothing to resume." ;;
+        --stdin)            do_stdin=true ;;
+        --help)             usage ; exit 0 ;;
+        --)                 break ;;
+        -*)                 usage_error "Unknown option '$1'" ;;
+        *)                  break ;;
+        esac
+        shift
+    done
+
+    # Set some sensible defaults
+    set_config "remote" "origin"
+
+    # Detect current head
+    set_config "original_branch" "$(current_git_branch)"
+
+    # Get the new branch name
+    new_branch="$1" ; shift ;
+    [ -n "$new_branch" ] || usage_error "Expected branch name"
+    set_config "new_branch" "$new_branch"
+
+    # Get the commit range
+    declare -a commit_range
+    if [ -n "$do_stdin" ]; then
+        # Read commits from file
+        while IFS= read -r line
+        do
+            [ -n "$line" ] || continue
+
+            # Get the hash
+            commit_hash="$(echo "$line" | cut -d' ' -f1)" || die "Malformed config in $splitConfig"
+            [ -n "$commit_hash" ] || continue
+
+            # Validate it
+            git cat-file commit "$commit_hash" >/dev/null 2>&1 || die "Unknown git hash '$commit_hash'"
+
+            # Save it
+            commit_range+=( "$commit_hash" )
+        done
+    else
+        # Read from command line
+        [ -n "$1" ] || usage_error "Expected commit range or --stdin"
+        while [ -n "$1" ]; do
+            commit_range+=( "$1" )
+        done
+    fi
+
+    # Write the config to the split config file
+    write_config
+
+    # Checkout the branch
+    if [ -n "$base_branch" ]; then
+        git checkout "${checkout_opts[@]}" -B "$new_branch" "$base_branch" || die "Failed to checkout $new_branch (base: $base_branch)"
+    else
+        git checkout "${checkout_opts[@]}" -b "$new_branch" || die "Failed to checkout $new_branch"
+    fi
+
+    # Begin the cherry-pick
+    # todo
+    git cherry-pick "${commit_range[@]}" || die "Cherry pick failed. Try --resume once you've fixed whatever's up."
+
+    # Finalize if this was successful
+    do_finish_split
+}
+
+#
+# Entry point
+#
+
+gitRoot="$(git rev-parse --show-toplevel)" || die "Failed to find git root"
+gitConfigRoot="$gitRoot/.git"
+
+splitConfig="$gitConfigRoot/split-config"
+if [ -f "$splitConfig" ]; then
+    # Run in "continue" mode
+    do_resume_split "$@"
+else
+    # Initialize the config
+    do_init_split "$@"
+fi
