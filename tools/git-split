@@ -71,7 +71,7 @@ read_config() {
 
 do_abort_split() {
     # Abort any existing cherry-pick
-    git cherry-pick --abort || :
+    git cherry-pick --abort 2>/dev/null || :
 
     # Try and switch back to the old branch if possible
     if [ -n "$git_split_original_branch" ]; then
@@ -99,7 +99,7 @@ do_push_split() {
 
     # Delete the new branch
     if [ -z "$git_split_keep_branch" ]; then
-        git branch -- --force "$git_split_new_branch" || :
+        git branch --delete --force "$git_split_new_branch" || :
     fi
 }
 
@@ -220,6 +220,7 @@ do_init_split() {
         [ -n "$1" ] || usage_error "Expected commit range or --stdin"
         while [ -n "$1" ]; do
             commit_range+=( "$1" )
+            shift
         done
     fi
 
