@@ -4,4 +4,4 @@ if [ -n "$1" ]; then
 else
     IFS=$'\n' read -r -d '' -a files < <(find . -mindepth 1 -maxdepth 1)
 fi
-du -hs "${files[@]}" | sort -hr
+du -hs "${files[@]}" | sort -h
