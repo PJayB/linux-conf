@@ -76,6 +76,10 @@ fi
 
 git lfs install
 
+if which alacritty ; then
+    sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$(which alacritty)" 50
+fi
+
 # Set up WSL-specific stuff
 if uname -r | grep "Microsoft"; then
     sudo apt-get purge -y openssh-server

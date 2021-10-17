@@ -37,7 +37,8 @@ p7zip-full          | apt-get yum
 p7zip-plugins       | yum dnf
 epel-release        | yum
 perf                | yum dnf
-terminator          | apt-get
+#terminator          | apt-get
+alacritty           | apt-get
 dconf-editor        | apt-get
 playerctl           | apt-get
 

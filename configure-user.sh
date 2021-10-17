@@ -3,6 +3,7 @@ set -e
 
 mkdir -p ~/.ssh
 mkdir -p ~/.config/micro
+mkdir -p $HOME/.config/alacritty
 
 [ -e ~/.calcrc ] || ln -sv $(pwd)/config-templates/calcrc ~/.calcrc
 [ -e ~/.nanorc ] || ln -sv $(pwd)/config-templates/nanorc ~/.nanorc
@@ -11,6 +12,7 @@ mkdir -p ~/.config/micro
 [ -e ~/.tmux.conf ] || ln -sv $(pwd)/config-templates/tmux.conf ~/.tmux.conf
 [ -e ~/.config/micro/bindings.json ] || ln -sv $(pwd)/config-templates/micro-bindings.json ~/.config/micro/bindings.json
 [ -e ~/.config/micro/settings.json ] || ln -sv $(pwd)/config-templates/micro-settings.json ~/.config/micro/settings.json
+[ -e ~/.config/alacritty/alacritty.yml ] || ln -sv $(pwd)/config-templates/alacritty.yml ~/.config/alacritty/alacritty.yml
 
 #if [ "$TERM" != "cygwin" ]; then
 #    sudo cp -v config-templates/lynx.cfg /etc/lynx.cfg
@@ -53,6 +55,10 @@ cp -vnr $(pwd)/config-templates/vscode/* "$CODEPATH/"
 
 mkdir -p "$HOME/.local/bin"
 rsync -vac "$(pwd)/tools/" "$HOME/.local/bin"
+
+if which alacritty ; then
+    update-alternatives --set x-terminal-emulator "$(which alacritty)"
+fi
 
 if [ "$SHELL" = "/bin/bash" ]; then
     . ~/.bashrc
