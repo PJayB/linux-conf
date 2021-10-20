@@ -84,24 +84,21 @@ OPTIONS
         Show this help text
 
 EXAMPLES
-    Cherry-pick a commit into a new branch that you intend to work on later,
-    then revert to current working state again:
+    Cherry-pick a commit into a new branch based on your current branch:
 
         $0 my-new-branch eb29bcaa4ff2ef6d35e1cfec5d760f37
 
-    Cherry-pick changes on top of an existing branch, then revert to
-    the current working state:
+    As previous, but commit changes on top of a different, existing branch:
 
         $0 --base base-branch my-new-branch 4e714ea..8bfe1f5
 
-    As before, but now push it to 'origin', and then delete the branch locally:
-
-        $0 --base base-branch --throwaway my-remote-branch 4e714ea..8bfe1f5
-
-    As before, but instead of deleting the branch, keep it around for further
-    iteration:
+    As previous, but automatically push the result to the remote:
 
         $0 --base base-branch --push my-new-branch d3f660e..8b7715f
+
+    As previous, but then delete the branch locally after pushing:
+
+        $0 --base base-branch --throwaway my-remote-branch 4e714ea..8bfe1f5
 
     Fetch a branch from upstream, cherry-pick a change on-top of that, push it,
     and throw it away:
@@ -207,11 +204,9 @@ do_push_split() {
     git push "${push_params[@]}" "$git_split_push_remote" "$git_split_new_branch:$git_split_new_branch" \
         || die "Failed to push $git_split_new_branch to $git_split_push_remote"
 
-    # Revert to the original branch
-    git checkout "$git_split_original_branch" || die "Failed to checkout original branch $git_split_original_branch"
-
-    # Delete the new branch
+    # Revert to the original branch and delete the new branch
     if [ -z "$git_split_keep_branch" ]; then
+        git checkout "$git_split_original_branch" || die "Failed to checkout original branch $git_split_original_branch"
         git branch --delete --force "$git_split_new_branch" || :
     fi
 }
@@ -283,21 +278,41 @@ do_init_split() {
     set_config "track" "y"
 
     # Parse the config
-    local do_stdin commit_range original_branch new_branch base_branch checkout_opts
-    local do_fetch fetch_remote current_branch
+    local do_stdin commit_range original_branch new_branch base_branch
+    local do_fetch fetch_remote current_branch overwrite_branch
     while [ -n "$1" ]; do
         case "$1" in
-        --thowaway|-t)      set_config "keep_branch" "n" ; set_config "track" "n" ; set_config "push" "y" ;;
+        --thowaway|-t)      set_config "keep_branch" "n"
+                            set_config "track" "n"
+                            set_config "push" "y" ;;
+
         --push|-p)          set_config "push" "y" ;;
-        --force-push|-f)    set_config "push" "y" ; set_config "force_push" "y" ;;
-        --remote)           check_param "$1" "$2" ; set_config_arg "remote" "$2" ; shift ;;
-        --base)             check_param "$1" "$2" ; base_branch="$2" ; shift ;;
-        --fetch-remote)     check_param "$1" "$2" ; fetch_remote="$2" ; do_fetch=y ; shift ;;
-        --overwrite)        checkout_opts+=( "-f" ) ;;
+
+        --force-push|-f)    set_config "push" "y"
+                            set_config "force_push" "y" ;;
+
+        --remote)           check_param "$1" "$2"
+                            set_config_arg "remote" "$2"
+                            shift ;;
+
+        --base)             check_param "$1" "$2"
+                            base_branch="$2"
+                            shift ;;
+
+        --overwrite)        overwrite_branch=y ;;
+
         --fetch)            do_fetch=y ;;
+
+        --fetch-remote)     check_param "$1" "$2"
+                            fetch_remote="$2"
+                            do_fetch=y
+                            shift ;;
+
         --stdin)            do_stdin=true ;;
+
         --abort)            die "Nothing to abort." ;;
         --resume)           die "Nothing to resume." ;;
+
         --show-state)       print_config ; exit 0 ;;
         --help)             usage ; exit 0 ;;
         --)                 break ;;
@@ -331,6 +346,7 @@ do_init_split() {
     set_config "new_branch" "$new_branch"
 
     # Get the commit range
+    local commit_range
     declare -a commit_range
     if [ -n "$do_stdin" ]; then
         # Read commits from file
@@ -351,20 +367,26 @@ do_init_split() {
     else
         # Read from command line
         [ -n "$1" ] || usage_error "Expected commit range or --stdin"
-        while [ -n "$1" ]; do
-            commit_range+=( "$1" )
-            shift
-        done
+
+        # Rev-parse it to generate a sensible list of commits
+        local rev_list
+        readarray -t rev_list < <(git rev-parse "$@")
+        readarray -t commit_range < <(git rev-list "${rev_list[@]}")
     fi
 
     # Write the config to the split config file
     write_config
 
+    # Delete the current branch if it already exists
+    if [ -n "$overwrite_branch" ]; then
+        git branch --delete "$new_branch" || :
+    fi
+
     # Checkout the branch
     if [ -n "$base_branch" ]; then
-        git checkout "${checkout_opts[@]}" -B "$new_branch" "$base_branch" || die "Failed to checkout $new_branch (base: $base_branch)"
+        git checkout -B "$new_branch" "$base_branch" || die "Failed to checkout $new_branch (base: $base_branch)"
     else
-        git checkout "${checkout_opts[@]}" -b "$new_branch" || die "Failed to checkout $new_branch"
+        git checkout -b "$new_branch" || die "Failed to checkout $new_branch"
     fi
 
     # Begin the cherry-pick
