@@ -53,6 +53,31 @@ OPTIONS
 
     --help
         Show this help text
+
+EXAMPLES
+    Split cherry-pick a commit into a new branch that you intend to work on
+    later, then revert to current working state again:
+
+        $0 my-new-branch eb29bcaa4ff2ef6d35e1cfec5d760f37
+
+    Cherry-pick changes on top of an existing branch, then revert to
+    the current working state:
+
+        $0 --base base-branch my-new-branch 4e714ea..8bfe1f5
+
+    As before, but now push it to 'origin', and then delete the branch locally:
+
+        $0 --base base-branch --throwaway my-remote-branch 4e714ea..8bfe1f5
+
+    As before, but instead of deleting the branch, keep it around for further
+    iteration:
+
+        $0 --base base-branch --push my-new-branch d3f660e..8b7715f
+
+    Fetch a branch from upstream, cherry-pick a change on-top of that, push it,
+    and throw it away:
+
+        $0 --base some-remote-branch --fetch --throwaway my-new-branch d3f660e
 "
 }
 
