@@ -84,8 +84,8 @@ OPTIONS
         Show this help text
 
 EXAMPLES
-    Split cherry-pick a commit into a new branch that you intend to work on
-    later, then revert to current working state again:
+    Cherry-pick a commit into a new branch that you intend to work on later,
+    then revert to current working state again:
 
         $0 my-new-branch eb29bcaa4ff2ef6d35e1cfec5d760f37
 
