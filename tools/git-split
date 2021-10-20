@@ -2,11 +2,11 @@
 die() { echo "$*" >&2 ; exit 1 ; }
 
 usage() {
-    echo "USAGE
+    echo "\
+USAGE
+    $0 [<options...>] <new-branch> <commits...>
 
-    $0 [--push|--force-push] [--remote <remote>] [--track] [--keep] 
-        [--base <base-branch>] [--fetch] [--fetch-remote <fetch-remote>]
-        [--overwrite] [--stdin] <new-branch> [<commits...>]
+    cat list-of-commits.txt | $0 [<options...>] --stdin <new-branch>
 
     $0 --resume
 
@@ -15,19 +15,15 @@ usage() {
     $0 --help
 
 OPTIONS
-
     -p, --push
-        Push the branch to the remote after splitting.
-
-    -k, --keep
-        Don't delete the branch after pushing to the remote. This is implied if
-        no variant of --push is used.
+        Push the branch to the remote after splitting. This sets the upstream
+        tracking branch by default (git -u).
 
     -f, --force-push
         Overwrite the remote branch when pushing. Implies --push.
 
-    -u, --track
-        Track the remote branch. Implies --keep.
+    -t, --throwaway
+        Push to the remote, and then delete the local branch. Implies --push.
 
     --remote <remote>
         Set the remote endpoint name to push to (default 'origin')
@@ -35,14 +31,14 @@ OPTIONS
     --base <base-branch>
         Set the base branch for the new branch (otherwise, fork from HEAD)
 
+    --overwrite
+        If <new-branch> already exists, overwrite it
+
     --fetch
         Fetch <base-branch> from <remote> before checkout
 
     --fetch-remote <fetch-remote>
         Fetch <base-branch> from <fetch-remote> instead of <remote>
-
-    --overwrite
-        If <new-branch> already exists, overwrite it
 
     --stdin
         Read a list of commits from stdin instead of from the command line
@@ -218,16 +214,17 @@ check_param() {
 do_init_split() {
     # Set some sensible defaults
     set_config "remote" "origin"
+    set_config "keep_branch" "y"
+    set_config "track" "y"
 
     # Parse the config
     local do_stdin commit_range original_branch new_branch base_branch checkout_opts
     local do_fetch fetch_remote
     while [ -n "$1" ]; do
         case "$1" in
-        --keep|-k)          set_config "keep_branch" "y" ;;
+        --thowaway|-t)      set_config "keep_branch" "n" ; set_config "track" "n" ; set_config "push" "y" ;;
         --push|-p)          set_config "push" "y" ;;
         --force-push|-f)    set_config "push" "y" ; set_config "force_push" "y" ;;
-        --track|-u)         set_config "keep_branch" "y" ; set_config "track" "y" ;;
         --remote)           check_param "$1" "$2" ; set_config "remote" "$2" ; shift ;;
         --base)             check_param "$1" "$2" ; base_branch="$2" ; shift ;;
         --fetch-remote)     check_param "$1" "$2" ; fetch_remote="$2" ; do_fetch=y ; shift ;;
@@ -243,11 +240,6 @@ do_init_split() {
         esac
         shift
     done
-
-    # If the branch isn't being pushed, then set keep to true
-    if [ -z "$git_split_push_branch" ]; then
-        set_config "keep" "y"
-    fi
 
     # Detect current head
     set_config "original_branch" "$(current_git_branch)"
