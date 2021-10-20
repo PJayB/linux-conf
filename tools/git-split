@@ -5,7 +5,8 @@ usage() {
     echo "USAGE
 
     $0 [--push|--force-push] [--remote <remote>] [--track] [--keep] 
-        [--base <branch>] [--overwrite] [--stdin] <new-branch> [<commits...>]
+        [--base <base-branch>] [--fetch] [--fetch-remote <fetch-remote>]
+        [--overwrite] [--stdin] <new-branch> [<commits...>]
 
     $0 --resume
 
@@ -31,8 +32,14 @@ OPTIONS
     --remote <remote>
         Set the remote endpoint name to push to (default 'origin')
 
-    --base <branch>
+    --base <base-branch>
         Set the base branch for the new branch (otherwise, fork from HEAD)
+
+    --fetch
+        Fetch <base-branch> from <remote> before checkout
+
+    --fetch-remote <fetch-remote>
+        Fetch <base-branch> from <fetch-remote> instead of <remote>
 
     --overwrite
         If <new-branch> already exists, overwrite it
@@ -214,6 +221,7 @@ do_init_split() {
 
     # Parse the config
     local do_stdin commit_range original_branch new_branch base_branch checkout_opts
+    local do_fetch fetch_remote
     while [ -n "$1" ]; do
         case "$1" in
         --keep|-k)          set_config "keep_branch" "y" ;;
@@ -222,10 +230,12 @@ do_init_split() {
         --track|-u)         set_config "keep_branch" "y" ; set_config "track" "y" ;;
         --remote)           check_param "$1" "$2" ; set_config "remote" "$2" ; shift ;;
         --base)             check_param "$1" "$2" ; base_branch="$2" ; shift ;;
+        --fetch-remote)     check_param "$1" "$2" ; fetch_remote="$2" ; do_fetch=y ; shift ;;
         --overwrite)        checkout_opts+=( "-f" ) ;;
+        --fetch)            do_fetch=y ;;
+        --stdin)            do_stdin=true ;;
         --abort)            die "Nothing to abort." ;;
         --resume)           die "Nothing to resume." ;;
-        --stdin)            do_stdin=true ;;
         --help)             usage ; exit 0 ;;
         --)                 break ;;
         -*)                 usage_error "Unknown option '$1'" ;;
@@ -241,6 +251,18 @@ do_init_split() {
 
     # Detect current head
     set_config "original_branch" "$(current_git_branch)"
+
+    # Fetch the branch from the remote if requested
+    if [ -n "$do_fetch" ]; then
+        [ -z "$base_branch" ] && die "--fetch requires --base"
+        [ -z "$fetch_remote" ] && fetch_remote="$git_split_push_remote"
+        [ -z "$fetch_remote" ] && fetch_remote="origin"
+
+        git fetch "$fetch_remote" "$base_branch" || die "Failed to fetch $base_branch"
+
+        # change base branch to remote/branch
+        base_branch="$fetch_remote/$base_branch"
+    fi
 
     # Get the new branch name
     new_branch="$1" ; shift ;
