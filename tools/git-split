@@ -1,4 +1,5 @@
 #!/bin/bash
+warn() { echo "$*" >&2 ; }
 die() { echo "$*" >&2 ; exit 1 ; }
 
 usage() {
@@ -32,7 +33,8 @@ OPTIONS
         Set the base branch for the new branch (otherwise, fork from HEAD)
 
     --overwrite
-        If <new-branch> already exists, overwrite it
+        If <new-branch> already exists, overwrite it. If there are any local
+        changes preventing branch switching, overwrite them.
 
     --fetch
         Fetch <base-branch> from <remote> before checkout
@@ -77,15 +79,21 @@ set_config() {
     local key="$1"
     shift
     local value="$*"
+    [ -n "$key" ] || die "set_config must have a key"
     case "$key" in
-        push)              git_split_push_branch="${value:-y}" ;;
-        force_push)        git_split_do_force_push="${value:-y}" ;;
-        remote)            git_split_push_remote="${value:-origin}" ;;
-        track)             git_split_track_remote="${value:-y}" ;;
-        keep_branch)       git_split_keep_branch="${value:-y}" ;;
+        push)              git_split_push_branch="${value}" ;;
+        force_push)        git_split_do_force_push="${value}" ;;
+        remote)            git_split_push_remote="${value}" ;;
+        track)             git_split_track_remote="${value}" ;;
+        keep_branch)       git_split_keep_branch="${value}" ;;
         original_branch)   git_split_original_branch="${value}" ;;
         new_branch)        git_split_new_branch="${value}" ;;
     esac
+}
+
+set_config_arg() {
+    [ -n "$2" ] || usage_error
+    set_config "$@"
 }
 
 print_config() {
@@ -124,7 +132,9 @@ do_abort_split() {
 
     # Try and switch back to the old branch if possible
     if [ -n "$git_split_original_branch" ]; then
-        git checkout "$git_split_original_branch" || :
+        git checkout "$git_split_original_branch" || warn "Unable to checkout original branch '$git_split_original_branch'"
+    else
+        warn "Original branch reference lost. Can't revert to previous revision."
     fi
 
     # Clean up config file
@@ -169,11 +179,15 @@ do_finish_split() {
 }
 
 do_resume_split() {
+    # Load the config
+    read_config
+
     local do_resume do_abort
     while [ -n "$1" ]; do
         case "$1" in
         --resume|-r)    do_resume=y ;;
         --abort)        do_abort=y ;;
+        --show-state)   print_config ; exit 0 ;;
         --help)         usage ; exit 0 ;;
         *)              usage_error "Unknown parameter '$1'";;
         esac
@@ -190,9 +204,6 @@ do_resume_split() {
     if [ -n "$do_abort" ]; then
         do_abort_split
     else
-        # Load the config
-        read_config
-
         # Check we're still on the right branch
         verify_current_git_branch
 
@@ -219,13 +230,13 @@ do_init_split() {
 
     # Parse the config
     local do_stdin commit_range original_branch new_branch base_branch checkout_opts
-    local do_fetch fetch_remote
+    local do_fetch fetch_remote current_branch
     while [ -n "$1" ]; do
         case "$1" in
         --thowaway|-t)      set_config "keep_branch" "n" ; set_config "track" "n" ; set_config "push" "y" ;;
         --push|-p)          set_config "push" "y" ;;
         --force-push|-f)    set_config "push" "y" ; set_config "force_push" "y" ;;
-        --remote)           check_param "$1" "$2" ; set_config "remote" "$2" ; shift ;;
+        --remote)           check_param "$1" "$2" ; set_config_arg "remote" "$2" ; shift ;;
         --base)             check_param "$1" "$2" ; base_branch="$2" ; shift ;;
         --fetch-remote)     check_param "$1" "$2" ; fetch_remote="$2" ; do_fetch=y ; shift ;;
         --overwrite)        checkout_opts+=( "-f" ) ;;
@@ -233,6 +244,7 @@ do_init_split() {
         --stdin)            do_stdin=true ;;
         --abort)            die "Nothing to abort." ;;
         --resume)           die "Nothing to resume." ;;
+        --show-state)       print_config ; exit 0 ;;
         --help)             usage ; exit 0 ;;
         --)                 break ;;
         -*)                 usage_error "Unknown option '$1'" ;;
@@ -242,7 +254,10 @@ do_init_split() {
     done
 
     # Detect current head
-    set_config "original_branch" "$(current_git_branch)"
+    current_branch="$(current_git_branch)"
+    if [ -n "$current_branch" ]; then
+        set_config "original_branch" "$current_branch"
+    fi
 
     # Fetch the branch from the remote if requested
     if [ -n "$do_fetch" ]; then
