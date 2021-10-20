@@ -2,7 +2,53 @@
 die() { echo "$*" >&2 ; exit 1 ; }
 
 usage() {
-    echo "$0 ... stuff"
+    echo "USAGE
+
+    $0 [--push|--force-push] [--remote <remote>] [--track] [--keep] 
+        [--base <branch>] [--overwrite] [--stdin] <new-branch> [<commits...>]
+
+    $0 --resume
+
+    $0 --abort
+
+    $0 --help
+
+OPTIONS
+
+    -p, --push
+        Push the branch to the remote after splitting.
+
+    -k, --keep
+        Don't delete the branch after pushing to the remote. This is implied if
+        no variant of --push is used.
+
+    -f, --force-push
+        Overwrite the remote branch when pushing. Implies --push.
+
+    -u, --track
+        Track the remote branch. Implies --keep.
+
+    --remote <remote>
+        Set the remote endpoint name to push to (default 'origin')
+
+    --base <branch>
+        Set the base branch for the new branch (otherwise, fork from HEAD)
+
+    --overwrite
+        If <new-branch> already exists, overwrite it
+
+    --stdin
+        Read a list of commits from stdin instead of from the command line
+
+    --resume
+        Resume an interrupted split, e.g. after resolving conflicts
+
+    --abort
+        Abort an in-progress split, or clean up state
+
+    --help
+        Show this help text
+"
 }
 
 usage_error() {
@@ -163,15 +209,17 @@ check_param() {
 }
 
 do_init_split() {
+    # Set some sensible defaults
+    set_config "remote" "origin"
+
     # Parse the config
     local do_stdin commit_range original_branch new_branch base_branch checkout_opts
     while [ -n "$1" ]; do
         case "$1" in
         --keep|-k)          set_config "keep_branch" "y" ;;
-        --push|-p)          set_config "push" "y" ; set_config "keep_branch" "y" ;;
+        --push|-p)          set_config "push" "y" ;;
         --force-push|-f)    set_config "push" "y" ; set_config "force_push" "y" ;;
-        --throwaway|-t)     set_config "push" "y" ;;
-        --track|-u)         set_config "push" "y" ; set_config "track" "y" ;;
+        --track|-u)         set_config "keep_branch" "y" ; set_config "track" "y" ;;
         --remote)           check_param "$1" "$2" ; set_config "remote" "$2" ; shift ;;
         --base)             check_param "$1" "$2" ; base_branch="$2" ; shift ;;
         --overwrite)        checkout_opts+=( "-f" ) ;;
@@ -186,8 +234,10 @@ do_init_split() {
         shift
     done
 
-    # Set some sensible defaults
-    set_config "remote" "origin"
+    # If the branch isn't being pushed, then set keep to true
+    if [ -z "$git_split_push_branch" ]; then
+        set_config "keep" "y"
+    fi
 
     # Detect current head
     set_config "original_branch" "$(current_git_branch)"
