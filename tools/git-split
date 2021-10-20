@@ -369,9 +369,7 @@ do_init_split() {
         [ -n "$1" ] || usage_error "Expected commit range or --stdin"
 
         # Rev-parse it to generate a sensible list of commits
-        local rev_list
-        readarray -t rev_list < <(git rev-parse "$@")
-        readarray -t commit_range < <(git rev-list "${rev_list[@]}")
+        readarray -t commit_range < <(git rev-parse "$@")
     fi
 
     # Write the config to the split config file
