@@ -307,7 +307,6 @@ do_init_split() {
     fi
 
     # Begin the cherry-pick
-    # todo
     git cherry-pick "${commit_range[@]}" || die "Cherry pick failed. Try --resume once you've fixed whatever's up."
 
     # Finalize if this was successful
