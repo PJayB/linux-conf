@@ -197,15 +197,15 @@ do_push_split() {
     [ -n "$git_split_push_remote" ] || die "Missing push remote"
 
     local push_params
-    [ -n "$git_split_do_force_push" ] && push_params+=( "-f" )
-    [ -n "$git_split_track_remote" ] && push_params+=( "-u" )
+    [ "$git_split_do_force_push" = "y" ] && push_params+=( "-f" )
+    [ "$git_split_track_remote" = "y" ] && push_params+=( "-u" )
     
     # Push the branch to origin or wherever
     git push "${push_params[@]}" "$git_split_push_remote" "$git_split_new_branch:$git_split_new_branch" \
         || die "Failed to push $git_split_new_branch to $git_split_push_remote"
 
     # Revert to the original branch and delete the new branch
-    if [ -z "$git_split_keep_branch" ]; then
+    if [ "$git_split_keep_branch" = "y" ]; then
         git checkout "$git_split_original_branch" || die "Failed to checkout original branch $git_split_original_branch"
         git branch --delete --force "$git_split_new_branch" || :
     fi
@@ -216,7 +216,7 @@ do_finish_split() {
     [ -n "$git_split_original_branch" ] || die "Missing original branch"
 
     # push?
-    if [ -n "$git_split_push_branch" ]; then
+    if [ "$git_split_push_branch" = "y" ]; then
         do_push_split
     else
         echo "Done. Push using:"
