@@ -282,7 +282,7 @@ do_init_split() {
     local do_fetch fetch_remote current_branch overwrite_branch
     while [ -n "$1" ]; do
         case "$1" in
-        --thowaway|-t)      set_config "keep_branch" "n"
+        --throwaway|-t)     set_config "keep_branch" "n"
                             set_config "track" "n"
                             set_config "push" "y" ;;
 
