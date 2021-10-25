@@ -29,7 +29,7 @@ toolsdir="$setupdir/tools"
 configdir="$setupdir/config-templates"
 
 # Export PATH to toolsdir
-export PATH="$PATH:$toolsdir"
+export PATH="$HOME/bin:$toolsdir:$PATH"
 
 # Disk space warning
 #df -PT | grep -vE 'squashfs|tmpfs|/boot' | awk --posix '{

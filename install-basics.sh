@@ -80,6 +80,13 @@ if which alacritty ; then
     sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$(which alacritty)" 50
 fi
 
+mkdir "$HOME/bin"
+cd "$HOME/bin"
+
+# Install user apps
+curl https://getmic.ro | bash
+
+
 # Set up WSL-specific stuff
 if uname -r | grep "Microsoft"; then
     sudo apt-get purge -y openssh-server
