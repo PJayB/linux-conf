@@ -5,10 +5,12 @@ set smarthome
 set fill 80
 set guidestripe 81
 set autoindent
-set indicator
 set linenumbers
-set minibar
 set mouse
-set suspendable
 set trimblanks
+set cutfromcursor
+set constantshow
+set indicator
+set minibar
+set suspendable
 
