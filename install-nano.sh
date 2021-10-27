@@ -24,7 +24,7 @@ sudo apt install -y\
 cd "$nanodir"
 ./autogen.sh
 ./configure --enable-utf8
-make
+make -j "$(nproc)"
 
 sudo apt purge -y nano || :
 sudo make install
