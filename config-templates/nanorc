@@ -8,7 +8,6 @@ set autoindent
 set linenumbers
 set mouse
 set trimblanks
-set cutfromcursor
 set constantshow
 set indicator
 set minibar
