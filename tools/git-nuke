@@ -1,0 +1,6 @@
+#!/bin/bash
+cd "$(realpath "$(git rev-parse --show-toplevel)")"
+git checkout .
+git clean -ffxd .
+git submodule update --init --recursive
+git submodule foreach 'git checkout . ; git clean -ffxd . '
