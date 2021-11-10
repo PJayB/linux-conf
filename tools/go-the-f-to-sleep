@@ -1,13 +1,44 @@
 #!/bin/bash
+#
+# Put this in your on-sleep script
+#
+
 if [ `whoami` != 'root' ]; then
     echo "You must be root to do this."
     exit 1
 fi
 
+#
+# Disable Wake on LAN
+#
+IFS=$'\n' read -d '' -r -a ethdevs < <(ip link |
+    sed -nr 's/^[0-9]+: ([^:]+):.*/\1/p' | grep -v '^lo$')
+for i in "${ethdevs[@]}"; do
+    echo "Disabling WOL for $i."
+    ethtool -s "$i" wol d
+done
+
+#
+# Take over power management of devices
+#
+echo "Enabling power management for all devices."
+for i in /sys/bus/*/devices/*/power/control ; do
+    echo on > "$i"
+done
+
+#
+# Disable ACPI wakeup
+#
+# TODO: bug here when the device has no name
+#
 declare -a states=( $(cat /proc/acpi/wakeup | grep enabled | grep -vE '^PWRB' | awk '{ print $1 }') )
 for state in "${states[@]}" ; do
-  printf "Disabling "
-  echo "$state" | sudo tee /proc/acpi/wakeup
+  if [[ "$state" =~ \*.* ]]; then
+    echo "Skipping '$state'"
+  else
+    printf "Disabling "
+    echo "$state" | sudo tee /proc/acpi/wakeup
+  fi
 done
 
 grep "enabled" /proc/acpi/wakeup
