@@ -1,4 +1,6 @@
 # Essentials
+net-tools           | apt-get
+ethtool             | apt-get
 git                 | apt-get yum dnf pacman brew
 git-gui             | apt-get yum dnf        brew
 git-lfs             | apt-get yum dnf pacman brew
