@@ -20,6 +20,7 @@ openvpn             | apt-get yum dnf pacman
 xclip               | apt-get yum dnf pacman       
 openssh-server      | apt-get yum dnf
 openssh             |                 pacman
+arandr              | apt-get
 xclip               | apt-get yum dnd pacman
 tmux                | apt-get
 g++                 | apt-get
