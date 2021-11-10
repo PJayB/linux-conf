@@ -6,7 +6,7 @@ wget                | apt-get yum dnf pacman brew
 curl                | apt-get yum dnf pacman brew     
 tmux                | apt-get yum dnf pacman brew     
 screen              | apt-get yum dnf pacman      
-python-pip          | apt-get yum dnf pacman              
+python3-pip         | apt-get yum dnf pacman              
 mercurial           | apt-get yum dnf pacman              
 gdb                 | apt-get yum dnf pacman      
 binutils            | apt-get yum dnf pacman              
@@ -20,6 +20,8 @@ openvpn             | apt-get yum dnf pacman
 xclip               | apt-get yum dnf pacman       
 openssh-server      | apt-get yum dnf
 openssh             |                 pacman
+xclip               | apt-get yum dnd pacman
+tmux                | apt-get
 g++                 | apt-get
 apt-file            | apt-get
 linux-tools-common  | apt-get
@@ -38,7 +40,7 @@ p7zip-plugins       | yum dnf
 epel-release        | yum
 perf                | yum dnf
 #terminator          | apt-get
-alacritty           | apt-get
+#alacritty           | apt-get
 dconf-editor        | apt-get
 playerctl           | apt-get
 

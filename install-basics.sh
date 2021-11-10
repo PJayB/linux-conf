@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 PKGMAN=$(./package-manager.sh)
@@ -8,7 +8,7 @@ if [ "$PKGMAN" = "" ]; then
 fi
 
 # If the package manager is brew, we may need to install brew
-if [ "$PKGMAN" == "brew" ] && ! brew -v ; then
+if [ "$PKGMAN" = "brew" ] && ! brew -v ; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
@@ -86,6 +86,10 @@ cd "$HOME/bin"
 # Install user apps
 curl https://getmic.ro | bash
 
+# Terminal
+if which snap >/dev/null; then
+	sudo snap install alacritty --classic
+fi
 
 # Set up WSL-specific stuff
 if uname -r | grep "Microsoft"; then
