@@ -1,5 +1,7 @@
 # Essentials
 apt-find            | apt-get
+debootstrap         | apt-get
+schroot             | apt-get
 net-tools           | apt-get
 ethtool             | apt-get
 git                 | apt-get yum dnf pacman brew
