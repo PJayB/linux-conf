@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
-nanodir="$HOME/nano"
+nanodir="${NANOHOME:-$HOME/nano}"
 
 if [ ! -d "$nanodir" ]; then
+    mkdir -p "$nanodir"
     git clone https://git.savannah.gnu.org/git/nano.git "$nanodir"
 fi
 
