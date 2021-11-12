@@ -1,11 +1,22 @@
 #basics-setup
 
 # adam2 <hyphen color> <current dir> <user@host> <user input>
-if [[ $TERM != "screen" && $TERM != "xterm-256color" ]]; then
-    exec tmux
-elif [[ $TERM == "xterm-256color" ]]; then
-    # 256-color chart: https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
-    prompt adam2 236 121 025 white
-else
-    prompt adam2 black green cyan white
-fi
+#if [[ $TERM != "screen" && $TERM != "xterm-256color" ]]; then
+#    exec tmux
+#elif [[ $TERM == "xterm-256color" ]]; then
+#    # 256-color chart: https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
+#    prompt adam2 236 121 025 white
+#else
+#    prompt adam2 black green cyan white
+#fi
+
+# Set up paths
+setupdir="$HOME/setup-scripts"
+toolsdir="$setupdir/tools"
+configdir="$setupdir/config-templates"
+
+# Export PATH to toolsdir
+export PATH="$HOME/bin:$toolsdir:$PATH"
+
+# Set up aliases
+source "$configdir/aliases"

@@ -41,6 +41,12 @@ export PATH="$HOME/bin:$toolsdir:$PATH"
 # Set up aliases
 source "$configdir/aliases"
 
+# Darwin sucks
+if [ "$(uname)" == "Darwin" ]; then
+    alias ll="ls -alhG"
+    alias xclip="xclip"
+fi
+
 # NOTE: must be at the end (aborts here if not interactive)
 [[ $- != *i* ]] && return
 TMUXBIN=$(which tmux)

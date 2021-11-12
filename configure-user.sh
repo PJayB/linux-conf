@@ -19,6 +19,7 @@ mkdir -p $HOME/.config/alacritty
 #fi
 
 touch ~/.bashrc
+touch ~/.zshrc
 
 if ! grep -Eq 'basics-setup' ~/.bashrc; then
     echo "Configuring bashrc"
@@ -27,6 +28,15 @@ if ! grep -Eq 'basics-setup' ~/.bashrc; then
     echo ". $(pwd)/config-templates/aliases" >> ~/.bashrc
 else
     echo "bashrc already configured"
+fi
+
+if ! grep -Eq 'basics-setup' ~/.zshrc; then
+    echo "Configuring zshrc"
+    echo "# basics-setup" >> ~/.zshrc
+    echo ". $(pwd)/config-templates/zshrc" >> ~/.zshrc
+    echo ". $(pwd)/config-templates/aliases" >> ~/.zshrc
+else
+    echo "zshrc already configured"
 fi
 
 if [ ! -f ~/.ssh/config ]; then

@@ -4,13 +4,9 @@ alias tailf="tail -f"
 #alias nano="nano -c"
 alias grepsrc="grep --color=auto -rIHn --include=\*.{h,cpp,cs,bindings,pl,pm,c}  --exclude-dir={.hg,.git}"
 alias debug="gdb -ex=r --args"
-if [ "$(uname)" == "Darwin" ]; then
-    alias ll="ls -alhG"
-else
-    alias ll="ls -alh --color=auto"
-    alias xclip="xclip -selection c"
-    alias neo="cmatrix"
-fi
+alias ll="ls -alh --color=auto"
+alias xclip="xclip -selection c"
+alias neo="cmatrix"
 alias duh='du -h'
 alias dfh='df -h'
 alias rless="less -R"
