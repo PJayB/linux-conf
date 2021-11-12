@@ -56,7 +56,7 @@ elif [ "$PKGMAN" = "dnf" ]; then
     sudo $PKGMAN install -y $PACKAGES
     sudo $PKGMAN groupinstall -y 'Development Tools'
 elif [ "$PKGMAN" = "pacman" ]; then
-    sudo $PKGMAN -Suy --noconfirm $PACKAGES
+    sudo $PKGMAN -Suy --needed --noconfirm $PACKAGES
 elif [ "$PKGMAN" = "brew" ]; then
     $PKGMAN install $PACKAGES
 else
