@@ -20,3 +20,6 @@ export PATH="$HOME/bin:$toolsdir:$PATH"
 
 # Set up aliases
 source "$configdir/aliases"
+
+# Set colors properly
+export TERM=xterm-256color
