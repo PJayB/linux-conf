@@ -1,12 +1,10 @@
 # Essentials
-playerctl           | apt-get
-patchelf            | apt-get
-git-gui             | apt-get
-apt-find            | apt-get
-debootstrap         | apt-get
-schroot             | apt-get
-net-tools           | apt-get
-ethtool             | apt-get
+playerctl           | apt-get 	      pacman
+patchelf            | apt-get         pacman
+debootstrap         | apt-get         pacman
+schroot             | apt-get         pacman
+net-tools           | apt-get         pacman
+ethtool             | apt-get         pacman
 git                 | apt-get yum dnf pacman brew
 git-gui             | apt-get yum dnf        brew
 git-lfs             | apt-get yum dnf pacman brew
@@ -14,54 +12,56 @@ wget                | apt-get yum dnf pacman brew
 curl                | apt-get yum dnf pacman brew     
 tmux                | apt-get yum dnf pacman brew     
 screen              | apt-get yum dnf pacman      
-python3-pip         | apt-get yum dnf pacman              
-mercurial           | apt-get yum dnf pacman              
+python3-pip         | apt-get yum dnf
 gdb                 | apt-get yum dnf pacman      
 binutils            | apt-get yum dnf pacman              
 gcc                 | apt-get yum dnf pacman      
+g++                 | apt-get yum dnf
 make                | apt-get yum dnf pacman brew         
 cmake               | apt-get yum dnf pacman          
 nano                | apt-get yum dnf pacman brew
 zip                 | apt-get yum dnf pacman      
-valgrind            | apt-get yum dnf pacman              
-openvpn             | apt-get yum dnf pacman          
 xclip               | apt-get yum dnf pacman       
 openssh-server      | apt-get yum dnf
 openssh             |                 pacman
-arandr              | apt-get
+arandr              | apt-get         pacman
 xclip               | apt-get yum dnd pacman
-tmux                | apt-get
-g++                 | apt-get
-apt-file            | apt-get
 linux-tools-common  | apt-get
-build-essential     | apt-get
+linux-tools         |                 pacman
 tweak               | apt-get
 apcalc              | apt-get
-htop                | apt-get
+htop                | apt-get         pacman
 auditd              | apt-get
-mercurial-keyring   | apt-get
 resolvconf          | apt-get         pacman
-trash-cli           | apt-get
-gnome-tweak-tool    | apt-get
+trash-cli           | apt-get         pacman
 p7zip               | apt-get     dnf pacman brew 
 p7zip-full          | apt-get yum
 p7zip-plugins       | yum dnf
 epel-release        | yum
 perf                | yum dnf
+gperftools          |                 pacman
 #terminator          | apt-get
-#alacritty           | apt-get
+playerctl           | apt-get         pacman
+
+# Debian stuff
+apt-find            | apt-get
+apt-file            | apt-get
+build-essential     | apt-get
 dconf-editor        | apt-get
-playerctl           | apt-get
+gnome-tweak-tool    | apt-get
+
+# Arch stuff
+alacritty           |                 pacman
 
 # Dumb stuff
 ddate               | apt-get
-lolcat              | apt-get
+lolcat              | apt-get pacman
 cmatrix             | apt-get pacman
-cowsay              | apt-get
+cowsay              | apt-get pacman
 toilet              | apt-get
-espeak              | apt-get
+espeak              | apt-get pacman
 
 # Eon stuff
-fzf                 | apt-get
-tree                | apt-get
+fzf                 | apt-get pacman
+tree                | apt-get pacman
 
