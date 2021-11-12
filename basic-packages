@@ -1,4 +1,5 @@
 # Essentials
+patchelf            | apt-get
 git-gui             | apt-get
 apt-find            | apt-get
 debootstrap         | apt-get
