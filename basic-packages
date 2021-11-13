@@ -52,6 +52,7 @@ gnome-tweak-tool    | apt-get
 
 # Arch stuff
 alacritty           |                 pacman
+base-devel          |                 pacman
 
 # Dumb stuff
 ddate               | apt-get
