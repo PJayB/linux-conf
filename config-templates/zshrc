@@ -23,3 +23,15 @@ source "$configdir/aliases"
 
 # Set colors properly
 export TERM=xterm-256color
+
+# NOTE: must be at the end (aborts here if not interactive)
+[[ $- != *i* ]] && return
+TMUXBIN=$(which tmux)
+if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
+    ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
+    if [[ -z "$ID" ]] ;then # if not available create a new one
+        exec tmux new-session
+    else
+        exec tmux attach-session -t "$ID" # if available attach to it
+    fi
+fi
