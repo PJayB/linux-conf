@@ -72,6 +72,23 @@ fi
 
 git lfs install
 
+# Arch setup
+if [ "$PKGMAN" = "pacman" ]; then
+    # Install yay
+    yay_target="$HOME/.yay-git"
+    if [ ! -d "$yay_target" ]; then
+        git clone "https://aur.archlinux.org/yay-git.git" "$yay_target"
+        cd "$yay_target"
+        makepkg -si --needed --noconfirm || :
+        cd -
+    fi
+
+    # Install yay packages
+    readarray -t yaypkgs < yay-packages
+    yay -S --norebuild --noredownload --batchinstall --nocleanafter --answerclean No --answerdiff N "${yaypkgs[@]}"
+fi
+
+# Debian setup
 if which update-alternatives && which alacritty ; then
     sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$(which alacritty)" 50
 fi
@@ -80,7 +97,7 @@ mkdir "$HOME/bin"
 cd "$HOME/bin"
 
 # Install user apps
-curl https://getmic.ro | bash
+#curl https://getmic.ro | bash
 
 # Terminal
 if which snap >/dev/null; then
