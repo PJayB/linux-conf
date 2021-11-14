@@ -83,9 +83,11 @@ if [ "$PKGMAN" = "pacman" ]; then
         cd -
     fi
 
-    # Install yay packages
-    readarray -t yaypkgs < yay-packages
-    yay -S --norebuild --noredownload --batchinstall --nocleanafter --answerclean No --answerdiff N "${yaypkgs[@]}"
+    # Install yay packages that aren't installed already
+    readarray -t yaypkgs < <(grep -v "$(pacman -Qqm)" yay-packages)
+    if [[ ${#yaypkgs[@]} -gt 0 ]]; then
+        yay -S --norebuild --noredownload --batchinstall --nocleanafter --answerclean No --answerdiff N "${yaypkgs[@]}"
+    fi
 fi
 
 # Debian setup
