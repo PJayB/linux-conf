@@ -19,7 +19,6 @@ mkdir -p $HOME/.config/alacritty
 #fi
 
 touch ~/.bashrc
-touch ~/.zshrc
 
 if ! grep -Eq 'basics-setup' ~/.bashrc; then
     echo "Configuring bashrc"
@@ -30,8 +29,9 @@ else
     echo "bashrc already configured"
 fi
 
-if ! grep -Eq 'basics-setup' ~/.zshrc; then
+if [ ! -f ~/.zshrc ] || ! grep -Eq 'basics-setup' ~/.zshrc; then
     echo "Configuring zshrc"
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "# basics-setup" >> ~/.zshrc
     echo ". $(pwd)/config-templates/zshrc" >> ~/.zshrc
     echo ". $(pwd)/config-templates/aliases" >> ~/.zshrc
