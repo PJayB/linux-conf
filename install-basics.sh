@@ -95,7 +95,7 @@ if which update-alternatives && which alacritty ; then
     sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$(which alacritty)" 50
 fi
 
-mkdir "$HOME/bin"
+mkdir -p "$HOME/bin"
 cd "$HOME/bin"
 
 # Install user apps
