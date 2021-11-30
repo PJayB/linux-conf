@@ -253,7 +253,7 @@ do_resume_split() {
         shift
     done
 
-    if [[ $optcnt -gt 0 ]]; then
+    if [[ $optcnt -gt 1 ]]; then
         usage_error "--resume, --reset and --abort are mutually exclusive."
     fi
     if [[ $optcnt -eq 0 ]]; then
