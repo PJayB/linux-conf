@@ -78,7 +78,11 @@ OPTIONS
         Resume an interrupted split, e.g. after resolving conflicts
 
     --abort
-        Abort an in-progress split, or clean up state
+        Abort an in-progress split, or clean up state. Attempts to abort any
+        active cherry-picks and check out the previous branch.
+
+    --reset
+        Forcefully cleans up git-split state. No other action is taken.
 
     --help
         Show this help text
@@ -177,7 +181,14 @@ read_config() {
     done <"$splitConfig"
 }
 
+do_reset_split() {
+    # Clean up config file
+    rm -f "$splitConfig"
+}
+
 do_abort_split() {
+    do_reset_split
+
     # Abort any existing cherry-pick
     git cherry-pick --abort 2>/dev/null || :
 
@@ -187,9 +198,6 @@ do_abort_split() {
     else
         warn "Original branch reference lost. Can't revert to previous revision."
     fi
-
-    # Clean up config file
-    rm -f "$splitConfig"
 }
 
 do_push_split() {
@@ -231,11 +239,13 @@ do_resume_split() {
     # Load the config
     read_config
 
-    local do_resume do_abort
+    local do_resume do_abort do_reset optcnt
+    optcnt=0
     while [ -n "$1" ]; do
         case "$1" in
-        --resume|-r)    do_resume=y ;;
-        --abort)        do_abort=y ;;
+        --resume|-r)    do_resume=y ; optcnt=$((optcnt+1)) ;;
+        --abort)        do_abort=y ; optcnt=$((optcnt+1)) ;;
+        --reset)        do_reset=y ; optcnt=$((optcnt+1)) ;;
         --show-state)   print_config ; exit 0 ;;
         --help)         usage ; exit 0 ;;
         *)              usage_error "Unknown parameter '$1'";;
@@ -243,14 +253,16 @@ do_resume_split() {
         shift
     done
 
-    if [ -n "$do_resume" ] && [ -n "$do_abort" ]; then
-        usage_error "--resume and --abort are mutually exclusive."
+    if [[ $optcnt -gt 0 ]]; then
+        usage_error "--resume, --reset and --abort are mutually exclusive."
     fi
-    if [ -z "$do_resume" ] && [ -z "$do_abort" ]; then
-        usage_error "Looks like a split is in progress. Use --resume or --abort."
+    if [[ $optcnt -eq 0 ]]; then
+        usage_error "Looks like a split is in progress. Use --resume, --reset or --abort."
     fi
 
-    if [ -n "$do_abort" ]; then
+    if [ -n "$do_reset" ]; then
+        do_reset_split
+    elif [ -n "$do_abort" ]; then
         do_abort_split
     else
         # Check we're still on the right branch
@@ -311,6 +323,7 @@ do_init_split() {
         --stdin)            do_stdin=true ;;
 
         --abort)            die "Nothing to abort." ;;
+        --reset)            exit 0 ;; # nothing to reset
         --resume)           die "Nothing to resume." ;;
 
         --show-state)       print_config ; exit 0 ;;
