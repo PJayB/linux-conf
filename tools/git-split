@@ -213,7 +213,7 @@ do_push_split() {
         || die "Failed to push $git_split_new_branch to $git_split_push_remote"
 
     # Revert to the original branch and delete the new branch
-    if [ "$git_split_keep_branch" = "y" ]; then
+    if [ "$git_split_keep_branch" = "n" ]; then
         git checkout "$git_split_original_branch" || die "Failed to checkout original branch $git_split_original_branch"
         git branch --delete --force "$git_split_new_branch" || :
     fi
@@ -235,6 +235,29 @@ do_finish_split() {
     rm -f "$splitConfig"
 }
 
+check_param() {
+    case "$2" in
+    -*|"")     usage_error "Expected parameter for '$1'" ;;
+    *)         : ;;
+    esac
+}
+
+do_common_options() {
+    case "$1" in
+    --throwaway|-t)     set_config "keep_branch" "n"
+                        set_config "track" "n"
+                        set_config "push" "y" ;;
+
+    --push|-p)          set_config "push" "y" ;;
+
+    --force-push|-f)    set_config "push" "y"
+                        set_config "force_push" "y" ;;
+
+    *)                  return 1;
+    esac
+    return 0
+}
+
 do_resume_split() {
     # Load the config
     read_config
@@ -242,6 +265,13 @@ do_resume_split() {
     local do_resume do_abort do_reset optcnt
     optcnt=0
     while [ -n "$1" ]; do
+        # handle shared options
+        if do_common_options "$@" ; then
+            shift 
+            continue
+        fi
+
+        # check resume specific options
         case "$1" in
         --resume|-r)    do_resume=y ; optcnt=$((optcnt+1)) ;;
         --abort)        do_abort=y ; optcnt=$((optcnt+1)) ;;
@@ -269,18 +299,11 @@ do_resume_split() {
         verify_current_git_branch
 
         # Resume the cherry-pick
-        git cherry-pick --resume || die "Failed to resume cherry-pick"
+        git cherry-pick --continue || :
 
         # Finalize
         do_finish_split
     fi
-}
-
-check_param() {
-    case "$2" in
-    -*|"")     usage_error "Expected parameter for '$1'" ;;
-    *)         : ;;
-    esac
 }
 
 do_init_split() {
@@ -293,16 +316,14 @@ do_init_split() {
     local do_stdin commit_range original_branch new_branch base_branch
     local do_fetch fetch_remote current_branch overwrite_branch
     while [ -n "$1" ]; do
+        # handle shared options
+        if do_common_options "$@" ; then
+            shift 
+            continue
+        fi
+
+        # check init specific options
         case "$1" in
-        --throwaway|-t)     set_config "keep_branch" "n"
-                            set_config "track" "n"
-                            set_config "push" "y" ;;
-
-        --push|-p)          set_config "push" "y" ;;
-
-        --force-push|-f)    set_config "push" "y"
-                            set_config "force_push" "y" ;;
-
         --remote)           check_param "$1" "$2"
                             set_config_arg "remote" "$2"
                             shift ;;
