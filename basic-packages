@@ -26,7 +26,7 @@ openssh-server      | apt-get yum dnf
 openssh             |                 pacman
 arandr              | apt-get         pacman
 xclip               | apt-get yum dnd pacman
-linux-tools-common  | apt-get                     !rpi
+linux-tools-common  | apt-get                       !rpi
 linux-tools         |                 pacman
 tweak               | apt-get
 apcalc              | apt-get
@@ -44,11 +44,11 @@ gperftools          |                 pacman
 playerctl           | apt-get         pacman
 
 # Debian stuff
-apt-find            | apt-get                    !rpi
+apt-find            | apt-get                       !rpi
 apt-file            | apt-get
 build-essential     | apt-get
 dconf-editor        | apt-get
-gnome-tweak-tool    | apt-get
+gnome-tweak-tool    | apt-get                       !rpi
 
 # Arch stuff
 alacritty           |                 pacman
