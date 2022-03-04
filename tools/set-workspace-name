@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+    echo "Usage: $0 [<old>] <new>" >&2
+    exit 1
+fi
+if [ -n "$2" ]; then 
+    i3-msg 'rename workspace "'"$1"'" to "'"$2"'"'
+else
+    i3-msg 'rename workspace "'"$1"'"'
+fi
