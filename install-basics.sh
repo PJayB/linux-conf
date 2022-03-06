@@ -12,39 +12,35 @@ if [ "$PKGMAN" = "brew" ] && ! brew -v ; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
-# CentOS has a frankly ANCIENT mercurial installation
-if [ "$PKGMAN" = "yum" ]; then
-sudo sh -c 'cat > /etc/yum.repos.d/mercurial.repo' <<- EOM
-[mercurial]
-name=Mercurial packages for CentOS7
-# baseurl
-baseurl=https://www.mercurial-scm.org/release/centos\$releasever
-skip_if_unavailable=True
-enabled=1
-gpgcheck=0
-EOM
+filters=( )
+
+# Raspbian doesn't have some packages
+is_rpi=
+if which lsb_release >/dev/null && lsb_release -i | grep -q 'Raspbian'; then
+    is_rpi=yes
+    filters+=( "!rpi" )
 fi
 
-# These packages don't exist on WSL
+# WSL doesn't have some packages
+is_wsl=
+if uname -r | grep "Microsoft"; then
+    is_wsl=yes
+    filters+=( "!wsl" )
+fi
+
+filters="(^#)$(printf "|(%s)" "${filters[@]}")"
+
+# These packages don't exist on WSL or Raspbian
 LINUX_TOOLS_PACKAGES=
-if ! uname -r | grep "Microsoft"; then
+if [ -z "$is_rpi" ] && [ -z "$is_wsl" ]; then
 	LINUX_TOOLS_PACKAGES="linux-tools-$(uname -r) linux-cloud-tools-$(uname -r)"
 fi
 
-if [ "$TRY_PACKAGES" != "" ]; then 
-    PACKAGES=$(cat basic-packages | grep -v "#" | sed -E 's/ *\|.*$//g')
+if [ "$TRY_PACKAGES" != "" ]; then
+    PACKAGES=$(cat basic-packages | grep -vE "$filters" | sed -E 's/ *\|.*$//g')
 else
-    PACKAGES=$(cat basic-packages | grep $PKGMAN | sed -E 's/ *\|.*$//g')
+    PACKAGES=$(cat basic-packages | grep -vE "$filters" | grep $PKGMAN | sed -E 's/ *\|.*$//g')
 fi
-
-#SHARED_PACKAGES="git wget curl tmux screen python-pip mercurial gdb binutils gcc make cmake nano zip valgrind openvpn xclip"
-#APT_RPM_PACKAGES="openssh-server"
-#DUMB_PACKAGES="ddate lolcat cmatrix cowsay toilet espeak"
-#APT_PACKAGES="$SHARED_PACKAGES $APT_RPM_PACKAGES g++ apt-file linux-tools-common $LINUX_TOOLS_PACKAGES build-essential tweak apcalc htop auditd mercurial-keyring resolvconf trash $DUMB_PACKAGES"
-#RPM_PACKAGES="$APT_RPM_PACKAGES p7zip-plugins perf"
-#YUM_PACKAGES="$SHARED_PACKAGES $RPM_PACKAGES p7zip-full epel-release"
-#DNF_PACKAGES="$SHARED_PACKAGES $RPM_PACKAGES p7zip"
-#PACMAN_PACKAGES="$SHARED_PACKAGES openssh"
 
 if [ "$PKGMAN" = "apt-get" ]; then
     sudo $PKGMAN update
