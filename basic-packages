@@ -20,6 +20,8 @@ g++                 | apt-get yum dnf
 make                | apt-get yum dnf pacman brew         
 cmake               | apt-get yum dnf pacman          
 nano                | apt-get yum dnf pacman brew
+emacs		    | apt-get yum dnf pacman brew
+zsh		    | apt-get yum dnf pacman
 zip                 | apt-get yum dnf pacman      
 xclip               | apt-get yum dnf pacman       
 openssh-server      | apt-get yum dnf
