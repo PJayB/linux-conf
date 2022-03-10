@@ -17,7 +17,11 @@
 > bismuthEnabled=true
 40a48
 > diminactiveEnabled=true
-56a65,71
+48a57
+> kwin4_effect_fadedesktopEnabled=true
+55a65
+> slideEnabled=false
+56a67,73
 > 
 > [Script-bismuth]
 > screenGapBottom=10
