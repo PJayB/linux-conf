@@ -61,15 +61,15 @@ else
 fi
 
 # Set up Fedora SSH server
-if [ "$PKGMAN" = "dnf" ] || [ "$PKGMAN" = "yum" ]; then
-    sudo systemctl enable sshd.service
-    sudo systemctl start sshd.service
+if [ "$PKGMAN" != "brew" ]; then
+    sudo systemctl enable --now sshd.service
 fi
 
 git lfs install
 
 # Arch setup
-if [ "$PKGMAN" = "pacman" ]; then
+# (disabled for now)
+if false && [ "$PKGMAN" = "pacman" ]; then
     # Install yay
     yay_target="$HOME/.yay-git"
     if [ ! -d "$yay_target" ]; then
@@ -93,9 +93,6 @@ fi
 
 mkdir -p "$HOME/bin"
 cd "$HOME/bin"
-
-# Install user apps
-#curl https://getmic.ro | bash
 
 # Terminal
 if which snap >/dev/null; then
