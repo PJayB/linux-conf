@@ -3,7 +3,7 @@
 set -e
 cd "$(dirname "$(realpath "$0")")"
 
-copy_if_exists() {
+cp_if_exists() {
     if [ -f "$1" ]; then
         cp -v "$1" "$2"
     fi
