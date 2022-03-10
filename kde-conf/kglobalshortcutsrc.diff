@@ -165,6 +165,10 @@
 > activate entry 3=none,Meta+3,Activate Entry 3
 > activate entry 4=none,Meta+4,Activate Entry 4
 > activate entry 5=none,Meta+5,Activate Entry 5
+283c318
+< _k_friendly_name=Latte Dock
+---
+> _k_friendly_name=Activity switching
 290,296c325,331
 < activate task manager entry 6=Meta+6,Meta+6,Activate Task Manager Entry 6
 < activate task manager entry 7=Meta+7,Meta+7,Activate Task Manager Entry 7

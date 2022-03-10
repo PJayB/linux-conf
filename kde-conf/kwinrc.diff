@@ -23,11 +23,16 @@
 > kwin4_effect_fadedesktopEnabled=true
 55a65
 > slideEnabled=false
-56a67,73
-> 
+57a68,74
 > [Script-bismuth]
-> screenGapBottom=10
-> screenGapLeft=10
-> screenGapRight=10
-> screenGapTop=10
-> tileLayoutGap=10
+> screenGapBottom=15
+> screenGapLeft=15
+> screenGapRight=15
+> screenGapTop=15
+> tileLayoutGap=15
+> 
+70a88,89
+> BorderSize=Tiny
+> BorderSizeAuto=false
+72a92
+> theme=__aurorae__svg__Sweet-Dark
