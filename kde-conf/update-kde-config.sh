@@ -3,6 +3,12 @@
 set -e
 cd "$(dirname "$(realpath "$0")")"
 
+copy_if_exists() {
+    if [ -f "$1" ]; then
+        cp -v "$1" "$2"
+    fi
+}
+
 srcdir="$HOME/config-backup/.config"
 if [ ! -d "$srcdir" ]; then
     echo "Please copy your .config folder into $srcdir first" >&2
@@ -23,6 +29,7 @@ konsolerc() {
 
 diff <(konsolerc "$srcdir/konsolerc") <(konsolerc "$basedir/konsolerc") > "konsolerc.diff" || :
 
-cp ~/.local/share/konsole/Pete.profile .
+cp_if_exists ~/.local/share/konsole/Pete.profile .
+cp_if_exists ~/.local/share/color-schemes/Peetified.colors .
 
 git diff || :
