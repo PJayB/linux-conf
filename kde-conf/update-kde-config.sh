@@ -30,6 +30,5 @@ konsolerc() {
 diff <(konsolerc "$srcdir/konsolerc") <(konsolerc "$basedir/konsolerc") > "konsolerc.diff" || :
 
 cp_if_exists ~/.local/share/konsole/Pete.profile .
-cp_if_exists ~/.local/share/color-schemes/Peetified.colors .
 
 git diff || :
