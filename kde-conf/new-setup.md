@@ -44,8 +44,9 @@ See `*.diff` for settings that should be applied.
 
 ## Zsh in Konsole
 
-    sed 's:/usr/bin/fish:/usr/bin/zsh:g' ~/.local/share/konsole/Garuda.profile > ~/.local/share/konsole/Pete.profile
+    cp Pete.profile ~/.local/share/konsole/Pete.profile
     sed 's:DefaultProfile=.*\.profile:DefaultProfile=Pete.profile:g' ~/.config/konsolerc | sponge ~/.config/konsolerc
+
 
 ## Bismuth
 
