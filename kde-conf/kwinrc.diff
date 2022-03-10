@@ -1,9 +1,10 @@
 9a10
 > Id_10=9b63fba2-d91d-4f5d-b181-3644d28dc436
-11,13c12,19
+11,14c12,20
 < Name_1=Desktop
 < Name_2=Offscreen
 < Number=2
+< Rows=1
 ---
 > Id_3=71376b0c-ebac-4a78-8c73-4f56beaf5b53
 > Id_4=d54a1ecf-857a-40f6-94e3-ff6c2abbd5f5
@@ -13,6 +14,7 @@
 > Id_8=8ca11a61-11eb-4735-86ab-07119b58b363
 > Id_9=3acf10a7-9be0-4717-81b0-9f72dd49000e
 > Number=10
+> Rows=2
 38a45
 > bismuthEnabled=true
 40a48

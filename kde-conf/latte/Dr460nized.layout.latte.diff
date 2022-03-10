@@ -10,3 +10,12 @@
 < PreloadWeight=26
 ---
 > PreloadWeight=46
+214a215,218
+> [Containments][12][Applets][98]
+> immutability=1
+> plugin=org.kde.plasma.pager
+> 
+226c230
+< appletOrder=40;78;79;77;95;42;80;83
+---
+> appletOrder=40;78;79;77;98;95;42;80;83
