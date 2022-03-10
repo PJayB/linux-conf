@@ -1,0 +1,12 @@
+36c36
+< launchers59=applications:garuda-welcome.desktop,applications:org.kde.konsole.desktop,applications:firedragon.desktop,applications:org.kde.dolphin.desktop,applications:org.kde.kate.desktop,applications:systemsettings.desktop,applications:octopi.desktop,applications:org.kde.kdeconnect.app.desktop
+---
+> launchers59=applications:org.kde.konsole.desktop,file:///latte-separator1.desktop,applications:firedragon.desktop,applications:org.kde.dolphin.desktop,applications:org.kde.kate.desktop,applications:bitwarden.desktop,applications:systemsettings.desktop,applications:org.kde.kdeconnect.app.desktop
+96c96
+< PreloadWeight=92
+---
+> PreloadWeight=100
+197c197
+< PreloadWeight=26
+---
+> PreloadWeight=46

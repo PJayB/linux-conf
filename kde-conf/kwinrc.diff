@@ -1,10 +1,23 @@
-11d10
+9a10
+> Id_10=9b63fba2-d91d-4f5d-b181-3644d28dc436
+11,13c12,19
 < Name_1=Desktop
-38a38
+< Name_2=Offscreen
+< Number=2
+---
+> Id_3=71376b0c-ebac-4a78-8c73-4f56beaf5b53
+> Id_4=d54a1ecf-857a-40f6-94e3-ff6c2abbd5f5
+> Id_5=4104ad89-7456-465c-bd8c-570e7eb57154
+> Id_6=faa58242-f66a-4838-9955-d4a0764beae6
+> Id_7=1628e1dc-32ef-46cd-8075-de34bee5f988
+> Id_8=8ca11a61-11eb-4735-86ab-07119b58b363
+> Id_9=3acf10a7-9be0-4717-81b0-9f72dd49000e
+> Number=10
+38a45
 > bismuthEnabled=true
-40a41
+40a48
 > diminactiveEnabled=true
-56a58,64
+56a65,71
 > 
 > [Script-bismuth]
 > screenGapBottom=10
