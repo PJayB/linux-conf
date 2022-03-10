@@ -38,15 +38,17 @@ Optional
 KDE Setup
 =========
 
-## Diffs
+
+## Restoring Settings
+
+TBD
 
 See `*.diff` for settings that should be applied.
 
-## Zsh in Konsole
+Zsh in Konsole:
 
     cp Pete.profile ~/.local/share/konsole/Pete.profile
     sed 's:DefaultProfile=.*\.profile:DefaultProfile=Pete.profile:g' ~/.config/konsolerc | sponge ~/.config/konsolerc
-
 
 ## Bismuth
 
@@ -56,12 +58,16 @@ Install:
 
 You'll need to apply the diffs to set this up properly.
 
+## Things to Fix
+
+ - [ ] Zsh ctrl+arrow keys
+ - [ ] Tmux copy-paste
+
 ## Finishing up
 
 Reload settings:
 
     qdbus org.kde.kwin /KWin reconfigure
-
 
 ## Saving Git Diffs of Settings
 
