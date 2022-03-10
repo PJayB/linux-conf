@@ -76,17 +76,15 @@ Reload settings:
 Software
 ========
 
-## BitWarden
+## Packages Available
 
-    sudo pacman -S bitwarden
+    sudo pacman -S \
+        bitwarden \
+        synergy \
+        meld \
+        ;
 
-## Diff Tool (Meld)
+## Look into Other Software...
 
-    sudo pacman -S meld
-
-## Other Software
-
-* VirtManager
 * Visual Studio Code
 * Nari Ultimate config
-
