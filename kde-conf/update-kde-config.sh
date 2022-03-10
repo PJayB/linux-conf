@@ -24,3 +24,5 @@ konsolerc() {
 diff <(konsolerc "$srcdir/konsolerc") <(konsolerc "$basedir/konsolerc") > "konsolerc.diff" || :
 
 cp ~/.local/share/konsole/Pete.profile .
+
+git diff
