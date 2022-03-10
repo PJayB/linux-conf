@@ -26,8 +26,12 @@ done
 konsolerc() {
     grep -vE -e "^DP-[0-9]+" -e "^RestorePositionForNextInstance=" -e "^State=" "$1"
 }
+plasmarc() {
+    grep -vE -e "^Dialog(Width|Height)=" "$1"
+}
 
 diff <(konsolerc "$srcdir/konsolerc") <(konsolerc "$basedir/konsolerc") > "konsolerc.diff" || :
+diff <(plasmarc "$srcdir/plasma-org.kde.plasma.desktop-appletsrc") <(plasmarc "$basedir/plasma-org.kde.plasma.desktop-appletsrc") > "plasma-org.kde.plasma.desktop-appletsrc.diff" || :
 
 cp_if_exists ~/.local/share/konsole/Pete.profile .
 
