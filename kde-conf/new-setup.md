@@ -63,13 +63,9 @@ Reload settings:
     qdbus org.kde.kwin /KWin reconfigure
 
 
-## Saving Diffs of Settings
+## Saving Git Diffs of Settings
 
-    for i in ksmserverrc kglobalshortcutsrc kwinrc khotkeysrc latte/Dr460nized.layout.latte
-    do
-        mkdir -p "$(dirname "$i")"
-        diff "$HOME/config-backup/.config/$i" "$HOME/.config/$i" > "$HOME/setup-scripts/kde-conf/$i.diff"
-    done
+    ./update-kde-config.sh
 
 Software
 ========
@@ -86,3 +82,5 @@ Software
 
 * VirtManager
 * Visual Studio Code
+* Nari Ultimate config
+

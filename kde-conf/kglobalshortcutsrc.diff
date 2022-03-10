@@ -47,7 +47,7 @@
 130c130
 < Window Minimize=Meta+PgDown,Meta+PgDown,Minimize Window
 ---
-> Window Minimize=,Meta+PgDown,Minimize Window
+> Window Minimize=none,Meta+PgDown,Minimize Window
 144c144
 < Window Quick Tile Bottom=Meta+Down,Meta+Down,Quick Tile Window to the Bottom
 ---
@@ -97,39 +97,39 @@
 190c190,225
 < view_actual_size=Meta+0,Meta+0,Actual Size
 ---
-> bismuth_decrease_master_size=,none,Bismuth: Decrease Master Area Size
+> bismuth_decrease_master_size=none,none,Bismuth: Decrease Master Area Size
 > bismuth_decrease_master_win_count=Meta+[,none,Bismuth: Decrease Master Area Window Count
 > bismuth_decrease_window_height=Meta+Ctrl+K,none,Bismuth: Decrease Window Height
 > bismuth_decrease_window_width=Meta+Ctrl+H,none,Bismuth: Decrease Window Width
 > bismuth_focus_bottom_window=none,none,Bismuth: Focus Bottom Window
 > bismuth_focus_left_window=none,none,Bismuth: Focus Left Window
-> bismuth_focus_next_window=,none,Bismuth: Focus Next Window
-> bismuth_focus_prev_window=,none,Bismuth: Focus Previous Window
+> bismuth_focus_next_window=none,none,Bismuth: Focus Next Window
+> bismuth_focus_prev_window=none,none,Bismuth: Focus Previous Window
 > bismuth_focus_right_window=none,none,Bismuth: Focus Right Window
 > bismuth_focus_upper_window=none,none,Bismuth: Focus Upper Window
-> bismuth_increase_master_size=,none,Bismuth: Increase Master Area Size
+> bismuth_increase_master_size=none,none,Bismuth: Increase Master Area Size
 > bismuth_increase_master_win_count=Meta+],none,Bismuth: Increase Master Area Window Count
 > bismuth_increase_window_height=Meta+Alt+Up\tMeta+Alt+Down,none,Bismuth: Increase Window Height
 > bismuth_increase_window_width=Meta+Alt+Left\tMeta+Alt+Right,none,Bismuth: Increase Window Width
 > bismuth_move_window_to_bottom_pos=Meta+Shift+Down,none,Bismuth: Move Window Down
-> bismuth_move_window_to_left_pos=,none,Bismuth: Move Window Left
-> bismuth_move_window_to_next_pos=,none,Bismuth: Move Window to the Next Position
-> bismuth_move_window_to_prev_pos=,none,Bismuth: Move Window to the Previous Position
-> bismuth_move_window_to_right_pos=,none,Bismuth: Move Window Right
+> bismuth_move_window_to_left_pos=none,none,Bismuth: Move Window Left
+> bismuth_move_window_to_next_pos=none,none,Bismuth: Move Window to the Next Position
+> bismuth_move_window_to_prev_pos=none,none,Bismuth: Move Window to the Previous Position
+> bismuth_move_window_to_right_pos=none,none,Bismuth: Move Window Right
 > bismuth_move_window_to_upper_pos=Meta+Shift+Up,none,Bismuth: Move Window Up
 > bismuth_next_layout=Meta+\\\\,none,Bismuth: Switch to the Next Layout
 > bismuth_prev_layout=Meta+|,none,Bismuth: Switch to the Previous Layout
 > bismuth_push_window_to_master=Meta+Space,none,Bismuth: Push Active Window to Master Area
 > bismuth_rotate=Meta+R,none,Bismuth: Rotate
 > bismuth_rotate_part=Meta+Shift+R,none,Bismuth: Rotate Part
-> bismuth_rotate_reverse=,none,Bismuth: Rotate (Reverse)
+> bismuth_rotate_reverse=none,none,Bismuth: Rotate (Reverse)
 > bismuth_toggle_float_layout=Meta+Shift+F,none,Bismuth: Toggle Floating Layout
-> bismuth_toggle_monocle_layout=,none,Bismuth: Toggle Monocle Layout
-> bismuth_toggle_quarter_layout=,none,Bismuth: Toggle Quarter Layout
-> bismuth_toggle_spiral_layout=,none,Bismuth: Toggle Spiral Layout
-> bismuth_toggle_spread_layout=,none,Bismuth: Toggle Spread Layout
-> bismuth_toggle_stair_layout=,none,Bismuth: Toggle Stair Layout
-> bismuth_toggle_three_column_layout=,none,Bismuth: Toggle Three Column Layout
+> bismuth_toggle_monocle_layout=none,none,Bismuth: Toggle Monocle Layout
+> bismuth_toggle_quarter_layout=none,none,Bismuth: Toggle Quarter Layout
+> bismuth_toggle_spiral_layout=none,none,Bismuth: Toggle Spiral Layout
+> bismuth_toggle_spread_layout=none,none,Bismuth: Toggle Spread Layout
+> bismuth_toggle_stair_layout=none,none,Bismuth: Toggle Stair Layout
+> bismuth_toggle_three_column_layout=none,none,Bismuth: Toggle Three Column Layout
 > bismuth_toggle_tile_layout=Meta+T,none,Bismuth: Toggle Tile Layout
 > bismuth_toggle_window_floating=Meta+F,none,Bismuth: Toggle Active Window Floating
 > view_actual_size=none,Meta+0,Actual Size
@@ -165,15 +165,19 @@
 > activate entry 3=none,Meta+3,Activate Entry 3
 > activate entry 4=none,Meta+4,Activate Entry 4
 > activate entry 5=none,Meta+5,Activate Entry 5
-290,294c325,329
+290,296c325,331
 < activate task manager entry 6=Meta+6,Meta+6,Activate Task Manager Entry 6
 < activate task manager entry 7=Meta+7,Meta+7,Activate Task Manager Entry 7
 < activate task manager entry 8=Meta+8,Meta+8,Activate Task Manager Entry 8
 < activate task manager entry 9=Meta+9,Meta+9,Activate Task Manager Entry 9
 < manage activities=Meta+Q,Meta+Q,Show Activity Switcher
+< next activity=Meta+Tab,none,Walk through activities
+< previous activity=Meta+Shift+Tab,none,Walk through activities (Reverse)
 ---
 > activate task manager entry 6=none,Meta+6,Activate Task Manager Entry 6
 > activate task manager entry 7=none,Meta+7,Activate Task Manager Entry 7
 > activate task manager entry 8=none,Meta+8,Activate Task Manager Entry 8
 > activate task manager entry 9=none,Meta+9,Activate Task Manager Entry 9
 > manage activities=none,Meta+Q,Show Activity Switcher
+> next activity=Meta+Tab,Meta+Tab,Walk through activities
+> previous activity=Meta+Shift+Tab,Meta+Shift+Tab,Walk through activities (Reverse)

@@ -15,7 +15,10 @@ Parent=FALLBACK/
 TerminalColumns=110
 
 [Interaction Options]
-AutoCopySelectedText=true
+AutoCopySelectedText=false
+CopyTextAsHTML=false
+MiddleClickPasteMode=1
+OpenLinksByDirectClickEnabled=true
 TrimLeadingSpacesInSelectedText=true
 TrimTrailingSpacesInSelectedText=true
 UnderlineFilesEnabled=true
@@ -29,3 +32,4 @@ HistorySize=100000
 
 [Terminal Features]
 BlinkingCursorEnabled=true
+UrlHintsModifiers=67108864

@@ -1,0 +1,10 @@
+2c2
+< DefaultProfile=Garuda.profile
+---
+> DefaultProfile=Pete.profile
+10a11
+> ToolBarsMovable=Disabled
+16a18,20
+> 
+> [TabBar]
+> CloseTabOnMiddleMouseButton=true
