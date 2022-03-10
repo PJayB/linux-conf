@@ -1,0 +1,14 @@
+11d10
+< Name_1=Desktop
+38a38
+> bismuthEnabled=true
+40a41
+> diminactiveEnabled=true
+56a58,64
+> 
+> [Script-bismuth]
+> screenGapBottom=10
+> screenGapLeft=10
+> screenGapRight=10
+> screenGapTop=10
+> tileLayoutGap=10
