@@ -20,7 +20,7 @@ basedir="$HOME/.config"
 for i in ksmserverrc kglobalshortcutsrc kwinrc khotkeysrc latte/Dr460nized.layout.latte
 do
     mkdir -p "$(dirname "$i")"
-    diff "$srcdir/$i" "$basedir/$i" > "./$i.diff" || :
+    diff "$srcdir/$i" "$basedir/$i" > "./$i.patch" || :
 done
 
 konsolerc() {
@@ -30,8 +30,8 @@ plasmarc() {
     grep -vE -e "^Dialog(Width|Height)=" "$1"
 }
 
-diff <(konsolerc "$srcdir/konsolerc") <(konsolerc "$basedir/konsolerc") > "konsolerc.diff" || :
-diff <(plasmarc "$srcdir/plasma-org.kde.plasma.desktop-appletsrc") <(plasmarc "$basedir/plasma-org.kde.plasma.desktop-appletsrc") > "plasma-org.kde.plasma.desktop-appletsrc.diff" || :
+diff <(konsolerc "$srcdir/konsolerc") <(konsolerc "$basedir/konsolerc") > "konsolerc.patch" || :
+diff <(plasmarc "$srcdir/plasma-org.kde.plasma.desktop-appletsrc") <(plasmarc "$basedir/plasma-org.kde.plasma.desktop-appletsrc") > "plasma-org.kde.plasma.desktop-appletsrc.patch" || :
 
 cp_if_exists ~/.local/share/konsole/Pete.profile .
 
