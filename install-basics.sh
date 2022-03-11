@@ -65,7 +65,7 @@ if [ "$PKGMAN" != "brew" ]; then
     sudo systemctl enable --now sshd.service
 fi
 
-git lfs install
+git lfs install || :
 
 # Arch setup
 # (disabled for now)
