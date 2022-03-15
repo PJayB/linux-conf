@@ -209,7 +209,7 @@ bismuth_rotate=Meta+R
 bismuth_rotate_part=Meta+Shift+R
 bismuth_rotate_reverse=
 bismuth_toggle_float_layout=Meta+Shift+F
-bismuth_toggle_monocle_layout=Meta+.; Meta+M
+bismuth_toggle_monocle_layout=Meta+M; Meta+.
 bismuth_toggle_quarter_layout=
 bismuth_toggle_spiral_layout=
 bismuth_toggle_spread_layout=
@@ -220,6 +220,16 @@ bismuth_toggle_window_floating=Meta+F
 view_actual_size=
 view_zoom_in=Meta+=
 view_zoom_out=Meta+-
+
+[mediacontrol][Global Shortcuts]
+mediavolumedown=Meta+F11
+mediavolumeup=Meta+F12
+nextmedia=Meta+Shift+F12; Media Next
+pausemedia=Media Pause
+playmedia=
+playpausemedia=Meta+F9; Media Play
+previousmedia=Media Previous; Meta+Shift+F11
+stopmedia=Media Stop
 
 [org.kde.dolphin.desktop][Global Shortcuts]
 _launch=
