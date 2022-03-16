@@ -9,7 +9,7 @@ fi
 
 # Start compositor
 if which picom && ! pgrep -x picom; then
-    picom --experimental-backends --config ~/.config/i3/picom.conf &
+    picom --experimental-backends --config ~/.config/i3/picom.conf -b
 fi
 
 # Reset wallpaper
