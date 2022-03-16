@@ -43,6 +43,7 @@ cp -v ./i3-startup.sh $I3/i3-startup.sh
 cp -v ./lock.sh $I3/lock.sh
 cp -v ./dunstrc ~/.config/dunst/dunstrc
 cp -v ./screenshot.sh $I3/screenshot.sh
+cp -v ./picom.conf $I3/picom.conf
 
 echo "NOTE: If you want DPI scaling, output your DPI to $I3/custom-dpi"
 

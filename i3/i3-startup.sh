@@ -7,6 +7,16 @@ if [ -f ~/.config/i3/custom-dpi ]; then
     xrandr --dpi $DPI
 fi
 
+# Start compositor
+if which picom && ! pgrep -x picom; then
+    picom --experimental-backends --config ~/.config/i3/picom.conf &
+fi
+
+# Reset wallpaper
+if which nitrogen; then
+    nitrogen --restore
+fi
+
 # Start pulseaudio
 start-pulseaudio-x11
 
