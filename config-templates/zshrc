@@ -64,10 +64,19 @@ case "${TERM}" in
     ;;
 esac
 
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  SESSION_TYPE=remote/ssh
+# many other tests omitted
+else
+  case $(ps -o comm= -p "$PPID") in
+    sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+  esac
+fi
+
 # NOTE: must be at the end (aborts here if not interactive)
 [[ $- != *i* ]] && return
 TMUXBIN=$(which tmux)
-if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
+if [ "$SESSION_TYPE" = "remote/ssh" ] && [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
     ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
     if [[ -z "$ID" ]] ;then # if not available create a new one
         exec tmux new-session
