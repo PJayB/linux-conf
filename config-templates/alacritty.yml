@@ -8,3 +8,6 @@ shell:
   program: /usr/bin/zsh
   args:
     - --login
+window.dynamic_title: true
+decorations: full
+background_opacity: 0.6
