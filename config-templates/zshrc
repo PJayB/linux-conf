@@ -73,10 +73,16 @@ else
   esac
 fi
 
+# If we're running a remote session then we want to run tmux
+# If we're NOT running a tiling window manager, we want to run tmux
+if [ "$SESSION_TYPE" = "remote/ssh" ] || ! pgrep -x "i3" >/dev/null ; then
+    WANT_TMUX="${WANT_TMUX:-yes}"
+fi
+
 # NOTE: must be at the end (aborts here if not interactive)
 [[ $- != *i* ]] && return
 TMUXBIN=$(which tmux)
-if [ "$SESSION_TYPE" = "remote/ssh" ] && [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
+if [ -n "$WANT_TMUX" ] && [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
     ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
     if [[ -z "$ID" ]] ;then # if not available create a new one
         exec tmux new-session
