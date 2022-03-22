@@ -74,8 +74,7 @@ else
 fi
 
 # If we're running a remote session then we want to run tmux
-# If we're NOT running a tiling window manager, we want to run tmux
-if [ "$SESSION_TYPE" = "remote/ssh" ] || ! pgrep -x "i3" >/dev/null ; then
+if [ "$SESSION_TYPE" = "remote/ssh" ] ; then
     WANT_TMUX="${WANT_TMUX:-yes}"
 fi
 
