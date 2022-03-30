@@ -1,0 +1,2 @@
+#!/bin/bash
+exec nohup "$@" </dev/null >"$(mktemp)" 2>&1 &
