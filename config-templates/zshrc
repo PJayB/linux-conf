@@ -11,12 +11,12 @@
 #fi
 
 # Set up paths
-setupdir="$HOME/setup-scripts"
+setupdir="$HOME/.local/linux-conf"
 toolsdir="$setupdir/tools"
 configdir="$setupdir/config-templates"
 
 # Export PATH to toolsdir
-export PATH="$HOME/bin:$toolsdir:$PATH"
+export PATH="$HOME/.local/bin:$HOME/bin:$toolsdir:$PATH"
 
 # Set up aliases
 source "$configdir/aliases"
