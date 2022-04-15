@@ -24,12 +24,12 @@ LS_COLORS='rs=0:di=01;94:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:c
 export LS_COLORS
 
 # Set up paths
-setupdir="$HOME/setup-scripts"
+setupdir="$HOME/.local/linux-conf"
 toolsdir="$setupdir/tools"
 configdir="$setupdir/config-templates"
 
 # Export PATH to toolsdir
-export PATH="$HOME/bin:$toolsdir:$PATH"
+export PATH="$HOME/.local/bin:$HOME/bin:$toolsdir:$PATH"
 
 # Disk space warning
 #df -PT | grep -vE 'squashfs|tmpfs|/boot' | awk --posix '{
