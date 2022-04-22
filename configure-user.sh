@@ -5,6 +5,7 @@ mkdir -p ~/.ssh
 mkdir -p ~/.config/micro
 mkdir -p $HOME/.config/alacritty
 
+[ -e ~/.vimrc ] || ln -sv $(pwd)/config-templates/vimrc ~/.vimrc
 [ -e ~/.calcrc ] || ln -sv $(pwd)/config-templates/calcrc ~/.calcrc
 [ -e ~/.nanorc ] || ln -sv $(pwd)/config-templates/nanorc ~/.nanorc
 [ -e ~/.gitconfig ] || ln -sv $(pwd)/config-templates/gitconfig ~/.gitconfig
