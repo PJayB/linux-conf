@@ -4,8 +4,6 @@ alias tailf="tail -f"
 #alias nano="nano -c"
 alias grepsrc="grep --color=auto -rIHn --include=\*.{h,cpp,cs,bindings,pl,pm,c}  --exclude-dir={.hg,.git}"
 alias debug="gdb -ex=r --args"
-alias ll="ls -alh --color=auto"
-alias xclip="xclip -selection c"
 alias neo="cmatrix"
 alias duh='du -h'
 alias dfh='df -h'
@@ -14,3 +12,12 @@ alias branch="git rev-parse --abbrev-ref HEAD"
 alias Rgrep="grep -RIsin --exclude-dir=.git"
 alias bc='bc -l'
 alias g=git
+
+if [ "$(uname)" == "Darwin" ]; then
+    alias ll="ls -alhG"
+    alias xclip="xclip"
+else
+    alias ll="ls -alh --color=auto"
+    alias xclip="xclip -selection c"
+fi
+
