@@ -13,7 +13,7 @@ alias Rgrep="grep -RIsin --exclude-dir=.git"
 alias bc='bc -l'
 alias g=git
 
-if [ "$(uname)" == "Darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
     alias ll="ls -alhG"
     alias xclip="xclip"
 else
