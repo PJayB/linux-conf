@@ -4,7 +4,9 @@ set -e
 mkdir -p ~/.ssh
 mkdir -p ~/.config/micro
 mkdir -p $HOME/.config/alacritty
+mkdir -p $HOME/.config/nvim
 
+[ -e ~/.config/nvim/init.vim ] || ln -sv $(pwd)/config-templates/init.vim ~/.config/nvim/init.vim
 [ -e ~/.vimrc ] || ln -sv $(pwd)/config-templates/vimrc ~/.vimrc
 [ -e ~/.calcrc ] || ln -sv $(pwd)/config-templates/calcrc ~/.calcrc
 [ -e ~/.nanorc ] || ln -sv $(pwd)/config-templates/nanorc ~/.nanorc
