@@ -7,3 +7,5 @@ set softtabstop=4
 set noexpandtab
 set smartindent
 
+set clipboard+=unnamedplus
+
