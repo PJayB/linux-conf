@@ -1,3 +1,5 @@
 [user]
 	name = Pete Lewis
 	email = mygit@pjblewis.com
+[color]
+	ui = auto
