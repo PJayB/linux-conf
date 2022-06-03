@@ -1,5 +1,6 @@
 #!/bin/bash
 
+alias podcon="podman container"
 alias tailf="tail -f"
 #alias nano="nano -c"
 alias grepsrc="grep --color=auto -rIHn --include=\*.{h,cpp,cs,bindings,pl,pm,c}  --exclude-dir={.hg,.git}"
@@ -12,6 +13,7 @@ alias branch="git rev-parse --abbrev-ref HEAD"
 alias Rgrep="grep -RIsin --exclude-dir=.git"
 alias bc='bc -l'
 alias g=git
+alias open="rundtch xdg-open"
 
 if [ "$(uname)" = "Darwin" ]; then
     alias ll="ls -alhG"
