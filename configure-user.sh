@@ -21,6 +21,15 @@ mkdir -p $HOME/.config/nvim
 #    sudo cp -v config-templates/lynx.cfg /etc/lynx.cfg
 #fi
 
+# nvim config
+nvim_cfg="$HOME/.local/share/nvim"
+nvim_plug="$nvim_cfg/site/autoload/plug.vim"
+if [ ! -f "$nvim_plug" ] && which nvim; then
+	sh -c "curl -fLo '${nvim_plug}' --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+	nvim -c ":PlugInstall" -c ":qa"
+fi
+
 touch ~/.bashrc
 
 if ! grep -Eq 'basics-setup' ~/.bashrc; then
