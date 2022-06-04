@@ -2,4 +2,7 @@
 	name = Pete Lewis
 	email = mygit@pjblewis.com
 [color]
-	ui = auto
+    ui = auto
+[core]
+    editor = nvim
+
