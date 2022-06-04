@@ -16,6 +16,10 @@ set clipboard+=unnamedplus
 :set colorcolumn=80
 :highlight ColorColumn ctermbg=DarkGray guibg=DarkGray
 
+" Show trailing whitepace and spaces before a tab:
+:highlight ExtraWhitespace ctermbg=red guibg=red
+:autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
+
 " Plugin definitions
 call plug#begin()
 
