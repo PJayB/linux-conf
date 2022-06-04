@@ -9,7 +9,12 @@ set smartindent
 set ignorecase
 set hlsearch
 
+" Use system clipboard
 set clipboard+=unnamedplus
+
+" Vertical ruler
+:set colorcolumn=80
+:highlight ColorColumn ctermbg=DarkGray guibg=DarkGray
 
 " Plugin definitions
 call plug#begin()
