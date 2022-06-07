@@ -14,6 +14,9 @@ window:
 draw_bold_text_with_bright_colors: true
 save_to_clipboard: true
 cursor:
-  style: Beam
+  style:
+    shape: Beam
+    blinking: Always
+  blink_interval: 666
 mouse:
   hide_when_typing: true
