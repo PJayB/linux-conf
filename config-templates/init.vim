@@ -23,6 +23,8 @@ set clipboard+=unnamedplus
 " Plugin definitions
 call plug#begin()
 
+Plug 'tpope/vim-sensible'
+
 Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 Plug 'kyazdani42/nvim-web-devicons'
 
@@ -39,4 +41,21 @@ nnoremap <c-P> <cmd>lua require('fzf-lua').files({ fzf_opts = { ['--border'] = f
 
 " Ctrl+E CHADopen
 nnoremap <c-E> <cmd>CHADopen<CR>
+
+" Wildcard options
+set wildmode=longest,list,full
+set wildmenu
+
+" Esc to go back to normal mode from terminal
+tnoremap <Esc> <C-\><C-n>
+
+" Faster window navigation
+nnoremap <C-h> <C-w><C-h>
+nnoremap <C-j> <C-w><C-j>
+nnoremap <C-k> <C-w><C-k>
+nnoremap <C-l> <C-w><C-l>
+nnoremap <C-Left> <C-w><C-h>
+nnoremap <C-Down> <C-w><C-j>
+nnoremap <C-Up> <C-w><C-k>
+nnoremap <C-Right> <C-w><C-l>
 
