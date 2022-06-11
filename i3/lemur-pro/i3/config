@@ -209,6 +209,10 @@ for_window [title="^Timeular$"] floating disable
 # Put machine-specific modifications below this line
 # --------------------------------------------------
 
+# Hand off suspend to lock screen
+exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/lock.sh
+
+# Gaps
 for_window [class=".*"] border pixel 1
 gaps inner 7
 

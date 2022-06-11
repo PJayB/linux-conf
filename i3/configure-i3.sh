@@ -38,12 +38,12 @@ fi
 
 copy_or_merge ./i3-config $I3/config
 copy_or_merge "$i3statusconf" ~/.config/i3status/config
-cp -v ./volume-adjust.sh $I3/volume-adjust.sh
-cp -v ./i3-startup.sh $I3/i3-startup.sh
-cp -v ./lock.sh $I3/lock.sh
-cp -v ./dunstrc ~/.config/dunst/dunstrc
-cp -v ./screenshot.sh $I3/screenshot.sh
-cp -v ./picom.conf $I3/picom.conf
+cp -nv ./volume-adjust.sh $I3/volume-adjust.sh
+cp -nv ./i3-startup.sh $I3/i3-startup.sh
+cp -nv ./lock.sh $I3/lock.sh
+cp -nv ./dunstrc ~/.config/dunst/dunstrc
+cp -nv ./screenshot.sh $I3/screenshot.sh
+cp -nv ./picom.conf $I3/picom.conf
 
 echo "NOTE: If you want DPI scaling, output your DPI to $I3/custom-dpi"
 
@@ -52,6 +52,8 @@ killall dunst; notify-send "i3 Configured!"
 
 # Warn if arandr is not installed
 [ -e /usr/bin/arandr ] || echo "NOTE: Don't forget to install arandr if you want better multimonitor config"
+[ -e /usr/bin/brightnessctl ] || echo "NOTE: Don't forget to install brightnessctl for monitor brightness adjustment."
 
 # Set up pulse (or try, anyway)
 ./pulse-setup.sh || echo "Please run pulse-setup.sh again to fix volume control"
+
