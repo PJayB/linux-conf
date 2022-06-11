@@ -67,6 +67,9 @@ fi
 
 git lfs install || :
 
+# Emoji picker
+pip3 install tuimoji || :
+
 # Arch setup
 # (disabled for now)
 if false && [ "$PKGMAN" = "pacman" ]; then
