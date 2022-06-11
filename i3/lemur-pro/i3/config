@@ -216,6 +216,10 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/lock.sh
 for_window [class=".*"] border pixel 1
 gaps inner 7
 
+# Rounded corners
+#border_radius 7
+
+# Override for keyboards without media keys
 bindsym $mod+F9 exec playerctl play-pause
 bindsym $mod+Shift+F12 exec playerctl next
 bindsym $mod+Shift+F11 playerctl previous
