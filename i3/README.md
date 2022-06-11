@@ -7,14 +7,16 @@ Prerequisites:
 * xss-lock
 * brightnessctl
 * picom
-* gnome-keyring & libsecret
+* gnome-keyring libsecret
 * sddm
+* pulseaudio pulseaudio-jack pulseaudio-bluetooth pulsemixer
 
 To-Do:
 
  * figure out bluetooth management
  * keyring
  * wifi reconnect without storing psk
+ * auto-switch pulse devices
 
 Keyring access: https://wiki.archlinux.org/title/GNOME/Keyring#Installation
 
