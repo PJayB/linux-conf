@@ -21,10 +21,10 @@ g++                 | apt-get yum dnf
 make                | apt-get yum dnf        brew
 cmake               | apt-get yum dnf
 nano                | apt-get yum dnf pacman brew
-emacs               | apt-get yum dnf pacman brew
 zsh                 | apt-get yum dnf pacman
 zip                 | apt-get yum dnf pacman      
 openssh-server      | apt-get yum dnf
+openssh             |                 pacman
 arandr              | apt-get
 xclip               | apt-get yum dnd pacman
 linux-tools-common  | apt-get                       !rpi
@@ -40,6 +40,7 @@ p7zip-full          | apt-get yum
 p7zip-plugins       | yum dnf
 epel-release        | yum
 perf                | yum dnf
+neovim              | apt-get yum dnf pacman
 
 # Debian stuff
 apt-find            | apt-get                       !rpi
