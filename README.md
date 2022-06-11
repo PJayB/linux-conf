@@ -1,1 +1,2 @@
-Scripts to lower iteration time of fresh Linux installs.
+Just don't even look in here - it's a disaster.
+
