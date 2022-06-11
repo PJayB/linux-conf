@@ -8,7 +8,6 @@ if [ "$1" = "" ]; then
     echo "Specify a direction, like +5%, or togglemute."
     exit 1
 fi
-echo "$PDEVICE $i"
 PDEVICE=$(cat $DEVFILE | grep "^[^#]")
 if [ "$1" = "togglemute" ]; then
     pactl set-sink-mute $PDEVICE toggle
