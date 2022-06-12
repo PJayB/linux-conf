@@ -59,3 +59,20 @@ nnoremap <C-Down> <C-w><C-j>
 nnoremap <C-Up> <C-w><C-k>
 nnoremap <C-Right> <C-w><C-l>
 
+" Faster buffer switch
+nnoremap <C-b> <cmd>bp<CR>
+nnoremap <C-n> <cmd>bn<CR>
+nnoremap <C-X> <cmd>bd<CR>
+
+" Switch to visual mode when shift-arrow-keys
+inoremap <S-Down> <Esc>v<Down>
+nnoremap <S-Down> <Esc>v<Down>
+inoremap <S-Up> <Esc>v<Up>
+nnoremap <S-Up> <Esc>v<Up>
+inoremap <S-Left> <Esc>v<Left>
+nnoremap <S-Left> <Esc>v<Left>
+inoremap <S-Right> <Esc>v<Right>
+nnoremap <S-Right> <Esc>v<Right>
+vnoremap <S-Down> <Down>
+vnoremap <S-Up> <Up>
+
