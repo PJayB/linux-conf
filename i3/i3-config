@@ -188,6 +188,9 @@ bindsym Mod1+Shift+Tab focus left
 bindsym Print exec ~/.config/i3/screenshot.sh --window
 bindsym $mod+Print exec ~/.config/i3/screenshot.sh --interactive
 
+# FireFox
+bindsym $mod+b exec firefox
+
 # Make the currently focused window a scratchpad
 bindsym $mod+Shift+grave move scratchpad
 

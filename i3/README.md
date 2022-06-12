@@ -14,6 +14,7 @@ Prerequisites:
 * blueman
 * dunst libnotify-bin
 * network-manager-gnome
+* gnome-screenshot
 
 Animated windows through picom: https://github.com/Arian8j2/picom-jonaburg-fix
 
