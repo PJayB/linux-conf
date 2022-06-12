@@ -12,6 +12,8 @@ Prerequisites:
 * sddm
 * pulseaudio pulseaudio-jack pulseaudio-bluetooth pulsemixer
 * blueman
+* dunst
+* betterlockscreen x11-utils feh graphicsmagick
 
 To-Do:
 
