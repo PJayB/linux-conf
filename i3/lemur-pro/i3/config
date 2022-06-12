@@ -248,7 +248,7 @@ client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
 client.background       #FFFFFF
 
 bar {
-  status_command i3status
+  status_command ~/.config/i3status/i3-status.sh
   i3bar_command i3bar --transparency
   colors {
     background #00000000

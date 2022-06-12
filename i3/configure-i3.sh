@@ -38,6 +38,7 @@ fi
 
 copy_or_merge ./i3-config $I3/config
 copy_or_merge "$i3statusconf" ~/.config/i3status/config
+cp -nv ./i3-status.sh ~/.config/i3status/
 cp -nv ./volume-adjust.sh $I3/volume-adjust.sh
 cp -nv ./i3-startup.sh $I3/i3-startup.sh
 cp -nv ./lock.sh $I3/lock.sh
