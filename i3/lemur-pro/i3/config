@@ -214,7 +214,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/lock.sh
 
 # Gaps
 for_window [class=".*"] border pixel 1
-gaps inner 7
+gaps inner 13
 
 # Rounded corners
 #border_radius 7
@@ -238,6 +238,7 @@ client.urgent           #2F343A #9E0071 #FFFFFF #6E0090   #5D0090
 client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
 
 # orange
+
 # class                 border  bground text    indicator child_border
 client.focused          #CE9121 #FFB429 #592C25 #FFB429   #CE9121
 client.focused_inactive #333333 #5F676A #FFFFFF #484E50   #5F676A

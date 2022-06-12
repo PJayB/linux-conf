@@ -15,11 +15,12 @@ Prerequisites:
 
 To-Do:
 
- * keyring
- * wifi reconnect without storing psk
- * picom window animations
- * picom rounded window corners
- * ricing the lock screen
+* keyring
+* wifi reconnect without storing psk
+* picom window animations
+* picom rounded window corners
+* ricing the lock screen
+* fix volume keys
 
 Keyring access: https://wiki.archlinux.org/title/GNOME/Keyring#Installation
 
