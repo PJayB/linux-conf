@@ -4,6 +4,6 @@ wpaper="$HOME/.config/i3/lock-screen.png"
 if [ -f "$wpaper" ]; then
     wpaper=("--image=$wpaper" "--tiling")
 else
-    wpaper=("--color=0C2D4A")
+    wpaper=("--color=000000")
 fi
 i3lock --show-failed-attempts --ignore-empty-password "${wpaper[@]}"

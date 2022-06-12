@@ -22,6 +22,5 @@ To-Do:
 
 * i3status update on media keys
 * betterlockscreen x11-utils feh graphicsmagick i3lock-color (https://github.com/Raymo111/i3lock-color)
-* theme dunst better
 * automatic display detection
 
