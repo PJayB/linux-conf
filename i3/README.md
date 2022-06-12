@@ -13,14 +13,12 @@ Prerequisites:
 * pulseaudio pulseaudio-jack pulseaudio-bluetooth pulsemixer
 * blueman
 * dunst libnotify-bin
+* network-manager-gnome
 
 Animated windows through picom: https://github.com/Arian8j2/picom-jonaburg-fix
 
 To-Do:
 
-* keyring
-* wifi reconnect without storing psk
-* picom rounded window corners
 * theme dunst
 * i3status update on media keys
 * betterlockscreen x11-utils feh graphicsmagick i3lock-color (https://github.com/Raymo111/i3lock-color)

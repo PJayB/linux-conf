@@ -228,6 +228,9 @@ exec --no-startup-id start-pulseaudio-x11
 # Start bluetooth applet
 exec --no-startup-id blueman-applet
 
+# Start network applet
+exec --no-startup-id nm-applet
+
 # Start dunst
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
 
