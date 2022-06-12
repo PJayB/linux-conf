@@ -70,7 +70,6 @@ load {
 volume master {
         format = "🔈 %volume"
         format_muted = "🔇 muted (%volume)"
-        device = "pulse:alsa_output.usb-Bose_Corporation_Bose_USB_Audio-00.analog-surround-21"
 }
 
 general {
