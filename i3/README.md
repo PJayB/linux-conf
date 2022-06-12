@@ -21,8 +21,8 @@ To-Do:
 * wifi reconnect without storing psk
 * picom window animations
 * picom rounded window corners
-* ricing the lock screen
-* fix volume keys
+* lock screen image tiling
+* i3status update on media keys
 
 Keyring access: https://wiki.archlinux.org/title/GNOME/Keyring#Installation
 
