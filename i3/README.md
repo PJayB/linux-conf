@@ -12,8 +12,7 @@ Prerequisites:
 * sddm
 * pulseaudio pulseaudio-jack pulseaudio-bluetooth pulsemixer
 * blueman
-* dunst
-* betterlockscreen x11-utils feh graphicsmagick
+* dunst libnotify-bin
 
 To-Do:
 
@@ -21,8 +20,8 @@ To-Do:
 * wifi reconnect without storing psk
 * picom window animations
 * picom rounded window corners
-* lock screen image tiling
 * i3status update on media keys
+* betterlockscreen x11-utils feh graphicsmagick i3lock-color (https://github.com/Raymo111/i3lock-color)
 
 Keyring access: https://wiki.archlinux.org/title/GNOME/Keyring#Installation
 
