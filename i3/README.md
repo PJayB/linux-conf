@@ -6,18 +6,20 @@ Prerequisites:
 * i3lock
 * xss-lock
 * brightnessctl
+* playerctl
 * picom
 * gnome-keyring libsecret
 * sddm
 * pulseaudio pulseaudio-jack pulseaudio-bluetooth pulsemixer
+* blueman
 
 To-Do:
 
- * figure out bluetooth management
  * keyring
  * wifi reconnect without storing psk
  * picom window animations
  * picom rounded window corners
+ * ricing the lock screen
 
 Keyring access: https://wiki.archlinux.org/title/GNOME/Keyring#Installation
 

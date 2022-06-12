@@ -20,6 +20,11 @@ fi
 # Start pulseaudio
 start-pulseaudio-x11
 
+# Start bluetooth tray
+if which blueman-applet; then
+    blueman-applet &
+fi
+
 # Start a terminal
 i3-msg "workspace 1; layout stacking; exec i3-sensible-terminal;"
 #if xrandr --listactivemonitors | grep -qE '^ 1:' ; then

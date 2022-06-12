@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set monitor layout
-if xrandr --properties | grep -qE '^DP-1 connected'; then
+if xrandr --properties | grep -qE '^DP-[[:number:]] connected'; then
     "$HOME/.screenlayout/acer-32-left-of-laptop.sh"
 fi
 
@@ -17,6 +17,11 @@ fi
 
 # Start pulseaudio
 start-pulseaudio-x11
+
+# Start bluetooth applet
+if which blueman-applet; then
+    blueman-applet &
+fi
 
 # Start a terminal
 i3-msg "workspace 1; layout stacking; exec i3-sensible-terminal;"

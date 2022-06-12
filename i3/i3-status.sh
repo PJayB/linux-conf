@@ -16,7 +16,7 @@ current_media() {
     fi
 }
 
-i3status | while :
+i3status "$@" | while :
 do
     read line
     if echo "$line" | grep -qE '^,?\[.*\]$' ; then
