@@ -7,8 +7,13 @@
 # If the above line is not correctly displayed, fix your editor first!
 
 general {
-        colors = true
-        interval = 1
+  colors = true
+  interval = 1
+  output_format = "i3bar"
+  colors = true
+  color_good = "#00AA00"
+  color_degraded = "#AAAA00"
+  color_bad = "#AA0000"
 }
 
 order += "tztime local"
@@ -69,12 +74,3 @@ volume master {
         format = "🔈 %volume"
         format_muted = "🔇 muted (%volume)"
 }
-
-general {
-  output_format = "i3bar"
-  colors = true
-  color_good = "#00AA00"
-  color_degraded = "#AAAA00"
-  color_bad = "#AA0000"
-}
-

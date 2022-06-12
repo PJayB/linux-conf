@@ -199,20 +199,6 @@ bindsym $mod+Shift+grave move scratchpad
 # Show the first scratchpad window
 bindsym $mod+grave scratchpad show
 
-# Run the startup script
-exec ~/.config/i3/i3-startup.sh
-
-for_window [title="^glxgears$"] floating enable
-for_window [title="^Calculator$"] floating enable
-for_window [title="^Timeular$"] floating disable
-
-# Put machine-specific modifications below this line
-# --------------------------------------------------
-
-# Gaps
-for_window [class=".*"] border pixel 1
-gaps inner 17
-
 # Hand off suspend to lock screen
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --show-failed-attempts --ignore-empty-password --color=060015
 
@@ -233,6 +219,9 @@ exec --no-startup-id nm-applet
 
 # Start dunst
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
+
+# Run the startup script
+exec ~/.config/i3/i3-startup.sh
 
 # Override for keyboards without media keys
 bindsym $mod+F9 exec playerctl play-pause
@@ -288,4 +277,15 @@ bar {
     binding_mode       #2F343A #FF0650 #FFFFFF
   }
 }
+
+for_window [title="^glxgears$"] floating enable
+for_window [title="^Calculator$"] floating enable
+for_window [title="^Timeular$"] floating disable
+
+# Put machine-specific modifications below this line
+# --------------------------------------------------
+
+# Gaps
+for_window [class=".*"] border pixel 1
+gaps inner 17
 

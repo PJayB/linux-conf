@@ -7,20 +7,23 @@
 # If the above line is not correctly displayed, fix your editor first!
 
 general {
-        colors = true
-        interval = 5
+  colors = true
+  interval = 1
+  output_format = "i3bar"
+  colors = true
+  color_good = "#00AA00"
+  color_degraded = "#AAAA00"
+  color_bad = "#AA0000"
 }
 
-#order += "ipv6"
-#order += "wireless _first_"
-order += "ethernet _first_"
-#order += "battery all"
+order += "tztime local"
 order += "disk /"
-#order += "disk /home"
+order += "disk /home"
 order += "cpu_usage"
 order += "memory"
-#order += "load"
-order += "tztime local"
+order += "battery all"
+order += "wireless _first_"
+order += "ethernet _first_"
 order += "volume master"
 
 wireless _first_ {
@@ -70,5 +73,4 @@ load {
 volume master {
         format = "🔈 %volume"
         format_muted = "🔇 muted (%volume)"
-        device = "pulse:alsa_output.usb-Bose_Corporation_Bose_USB_Audio-00.analog-surround-21"
 }
