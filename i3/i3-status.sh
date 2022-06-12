@@ -1,10 +1,13 @@
 #!/bin/bash
 
 current_audio_sink() {
-    sink="$(pacmd list-sinks | grep -Pzo "\* index(.*\n)*" | sed \$d | 
-        grep -e "device.description" | cut -f2 -d\")"
-    if [ -n "$sink" ]; then
-        echo -n ',{"name":"audiosink","full_text":"'"$sink"'"}'
+    default_sink="$(pactl get-default-sink)"
+    [ -n "$default_sink" ] || return
+    desc="$(pacmd list-sinks | grep -Pzo \
+        "(?s)${default_sink}"'(.*?)device.description = (?-s).*' \
+        --color=never | tail -n 1 | cut -f2 -d\")"
+    if [ -n "$desc" ]; then
+        echo -n ',{"name":"audiosink","full_text":"'"$desc"'"}'
     fi
 }
 
