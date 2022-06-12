@@ -24,8 +24,8 @@ font pango:monospace 8
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 font pango:DejaVu Sans Mono 8
 
-# Pete: set stacking as default layout type
-workspace_layout stacking
+# set stacking as default layout type
+workspace_layout default
 
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -217,7 +217,7 @@ gaps inner 17
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --show-failed-attempts --ignore-empty-password --color=060015
 
 # Start compositor
-exec --no-startup-id picom --experimental-backends --config ~/.config/i3/picom.conf -b
+exec --no-startup-id ~/.local/bin/picom --experimental-backends --config ~/.config/i3/picom.conf -b
 
 # Restore wallpaper
 exec --no-startup-id nitrogen --restore
@@ -254,6 +254,8 @@ client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
 # class                 border  bground text    indicator child_border
 client.focused          #CE9121 #FFB429 #592C25 #FFB429   #CE9121
 client.focused_inactive #333333 #5F676A #FFFFFF #484E50   #5F676A
+#client.focused          #333333 #222222 #FFFFFF #292D2E   #222222
+#client.focused_inactive #333333 #222222 #888888 #292D2E   #222222
 client.unfocused        #333333 #222222 #888888 #292D2E   #222222
 client.urgent           #2F343A #900000 #FFFFFF #900000   #900000
 client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
