@@ -16,7 +16,8 @@ To-Do:
  * figure out bluetooth management
  * keyring
  * wifi reconnect without storing psk
- * auto-switch pulse devices
+ * picom window animations
+ * picom rounded window corners
 
 Keyring access: https://wiki.archlinux.org/title/GNOME/Keyring#Installation
 
