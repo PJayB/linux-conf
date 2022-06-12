@@ -177,11 +177,6 @@ bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/brightness-adjus
 # Lock screen
 bindsym $mod+l exec ~/.config/i3/lock.sh
 
-# Override the terminal
-#bindsym $mod+Return exec gnome-terminal
-exec export $TERMINAL=gnome-terminal
-set $TERMINAL gnome-terminal
-
 # Turn on numlock
 exec_always --no-startup-id numlockx on
 
@@ -221,7 +216,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
 
 # Run the startup script
-exec ~/.config/i3/i3-startup.sh
+exec --no-startup-id ~/.config/i3/i3-startup.sh
 
 # Override for keyboards without media keys
 bindsym $mod+F9 exec playerctl play-pause
