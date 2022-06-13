@@ -204,7 +204,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/lock.sh
 exec --no-startup-id ~/.local/bin/picom --experimental-backends --config ~/.config/i3/picom.conf -b
 
 # Restore wallpaper
-exec --no-startup-id nitrogen --restore
+exec --no-startup-id variety
 
 # Start pulse audio
 exec --no-startup-id start-pulseaudio-x11
