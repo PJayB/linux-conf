@@ -197,27 +197,6 @@ bindsym $mod+Shift+grave move scratchpad
 # Show the first scratchpad window
 bindsym $mod+grave scratchpad show
 
-# Hand off suspend to lock screen
-exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/lock.sh
-
-# Start compositor
-exec --no-startup-id picom --experimental-backends --config ~/.config/i3/picom.conf -b
-
-# Restore wallpaper
-exec --no-startup-id variety
-
-# Start pulse audio
-exec --no-startup-id start-pulseaudio-x11
-
-# Start bluetooth applet
-exec --no-startup-id blueman-applet
-
-# Start network applet
-exec --no-startup-id nm-applet
-
-# Start dunst
-exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-
 # Run the startup script
 exec --no-startup-id ~/.config/i3/i3-startup.sh
 
