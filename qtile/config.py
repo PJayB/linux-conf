@@ -28,8 +28,10 @@ from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile import hook
 
 import os
+import subprocess
 
 mod = "mod4"
 terminal = guess_terminal()
@@ -82,6 +84,7 @@ keys.extend([
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod, "shift"], "q", lazy.spawn(lock_cmd), desc="Lock the screen"),
     Key([mod, "shift"], "e", lazy.spawn(logout_cmd), desc="Exit Qtile"),
+    Key([mod], "b", lazy.spawn("firefox"), desc="Spawn Firefox"),
     ])
 
 groups = [Group(i) for i in "123456789"]
@@ -162,6 +165,7 @@ screens = [
                 #widget.BatteryIcon(),
                 widget.Battery(fmt="🔋 {}"),
                 widget.Systray(),
+                widget.Volume(emoji=True),
                 widget.Clock(format="🗓 %Y-%m-%d %a %I:%M %p"),
                 #widget.QuickExit(
                 #    default_text='🔨', countdown_format='[{}]'
@@ -170,6 +174,7 @@ screens = [
             24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            background = "#00000000",
         ),
     ),
 ]
@@ -220,9 +225,6 @@ wl_input_rules = None
 wmname = "LG3D"
 
 # Start programs on login
-import subprocess
-from libqtile import hook
-
 @hook.subscribe.startup_once
 def autostart():
     home = os.path.expanduser('~/.local/linux-conf/qtile/autostart.sh')
