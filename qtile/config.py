@@ -38,6 +38,8 @@ terminal = guess_terminal()
 
 lock_cmd = os.path.expanduser('~/.local/linux-conf/qtile/lock.sh');
 logout_cmd = os.path.expanduser('~/.local/linux-conf/qtile/logout.sh');
+volume_cmd = os.path.expanduser('~/.local/linux-conf/qtile/volume-adjust.sh');
+brightness_cmd = os.path.expanduser('~/.local/linux-conf/qtile/brightness-adjust.sh');
 
 keys = []
 
@@ -85,6 +87,16 @@ keys.extend([
     Key([mod, "shift"], "q", lazy.spawn(lock_cmd), desc="Lock the screen"),
     Key([mod, "shift"], "e", lazy.spawn(logout_cmd), desc="Exit Qtile"),
     Key([mod], "b", lazy.spawn("firefox"), desc="Spawn Firefox"),
+
+    # Volume keys
+    Key([], "XF86AudioRaiseVolume", lazy.spawn([volume_cmd, "+5%"]), desc="Volume Up"),
+    Key([], "XF86AudioLowerVolume", lazy.spawn([volume_cmd, "-5%"]), desc="Volume Down"),
+    Key([], "XF86AudioMute", lazy.spawn([volume_cmd, "togglemute"]), desc="Toggle Mute"),
+
+    # Screen Brightness
+    Key([], "XF86MonBrightnessUp", lazy.spawn([brightness_cmd, "+5%"]), desc="Brightness Up"),
+    Key([], "XF86MonBrightnessDown", lazy.spawn([brightness_cmd, "5%-"]), desc="Brightness Down"),
+
     ])
 
 groups = [Group(i) for i in "123456789"]
@@ -145,7 +157,10 @@ screens = [
         bottom=bar.Bar(
             [
                 widget.CurrentLayout(),
-                widget.GroupBox(),
+                widget.GroupBox(
+                    hide_unused=True,
+                    inactive="#aaaaaa",
+                    this_current_screen_border='#CE9121'),
                 widget.Prompt(),
                 widget.WindowName(),
                 widget.Chord(
@@ -154,7 +169,6 @@ screens = [
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                widget.TextBox("put stuff here", name="default"),
                 widget.DF(fmt="🐧 {}", partition="/", visible_on_warn=False),
                 widget.DF(fmt="🏠 {}", partition="/home", visible_on_warn=False),
                 widget.CPU(fmt="🤖 {}"),
@@ -164,8 +178,9 @@ screens = [
                 widget.NetGraph(),
                 #widget.BatteryIcon(),
                 widget.Battery(fmt="🔋 {}"),
+                widget.ThermalSensor(),
                 widget.Systray(),
-                widget.Volume(emoji=True),
+                widget.PulseVolume(emoji=True),
                 widget.Clock(format="🗓 %Y-%m-%d %a %I:%M %p"),
                 #widget.QuickExit(
                 #    default_text='🔨', countdown_format='[{}]'
