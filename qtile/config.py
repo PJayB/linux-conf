@@ -34,10 +34,11 @@ import os
 import subprocess
 
 # Start programs on login
-@hook.subscribe.startup
+@hook.subscribe.startup_once
 def autostart():
     home = os.path.expanduser('~/.local/linux-conf/qtile/autostart.sh')
-    subprocess.Popen([home])
+    output = subprocess.check_output([home], shell=True).decode('utf-8')
+    logger.error(output)
 
 mod = "mod4"
 terminal = guess_terminal()
