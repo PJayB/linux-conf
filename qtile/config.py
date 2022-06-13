@@ -88,6 +88,14 @@ keys.extend([
     Key([mod, "shift"], "e", lazy.spawn(logout_cmd), desc="Exit Qtile"),
     Key([mod], "b", lazy.spawn("firefox"), desc="Spawn Firefox"),
 
+    # Media Keys
+    Key([mod, "shift"], "F12", lazy.spawn(["playerctl", "next"]), desc="Next Track"),
+    Key([mod, "shift"], "F11", lazy.spawn(["playerctl", "previous"]), desc="Previous Track"),
+    Key([mod], "F9", lazy.spawn(["playerctl", "play-pause"]), desc="Play/Pause"),
+    Key([mod], "F10", lazy.spawn([volume_cmd, "togglemute"]), desc="Toggle Mute"),
+    Key([mod], "F11", lazy.spawn([volume_cmd, "-5%"]), desc="Volume Down"),
+    Key([mod], "F12", lazy.spawn([volume_cmd, "+5%"]), desc="Volume Up"),
+
     # Volume keys
     Key([], "XF86AudioRaiseVolume", lazy.spawn([volume_cmd, "+5%"]), desc="Volume Up"),
     Key([], "XF86AudioLowerVolume", lazy.spawn([volume_cmd, "-5%"]), desc="Volume Down"),
