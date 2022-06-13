@@ -33,6 +33,12 @@ from libqtile import hook
 import os
 import subprocess
 
+# Start programs on login
+@hook.subscribe.startup
+def autostart():
+    home = os.path.expanduser('~/.local/linux-conf/qtile/autostart.sh')
+    subprocess.Popen([home])
+
 mod = "mod4"
 terminal = guess_terminal()
 
@@ -246,10 +252,4 @@ wl_input_rules = None
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
-
-# Start programs on login
-@hook.subscribe.startup_once
-def autostart():
-    home = os.path.expanduser('~/.local/linux-conf/qtile/autostart.sh')
-    subprocess.Popen([home])
 
