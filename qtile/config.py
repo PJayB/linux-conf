@@ -29,36 +29,38 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
+import os
+
 mod = "mod4"
 terminal = guess_terminal()
 
-keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-    # Switch between windows
-    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
-    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
-    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "leftarrow", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "rightarrow", lazy.layout.right(), desc="Move focus to right"),
-    Key([mod], "downarrow", lazy.layout.down(), desc="Move focus down"),
-    Key([mod], "uparrow", lazy.layout.up(), desc="Move focus up"),
-    # Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
-    Key([mod], "space", lazy.layout.rotate(), desc="Move window focus to other window"),
+lock_cmd = os.path.expanduser('~/.local/linux-conf/qtile/lock.sh');
+logout_cmd = os.path.expanduser('~/.local/linux-conf/qtile/logout.sh');
 
-    # Move windows between left/right columns or move up/down in current stack.
-    # Moving out of range in Columns layout will create new column.
-    Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
-    Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
-    Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    # Grow windows. If current window is on the edge of screen and direction
-    # will be to screen edge - window would shrink.
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
-    Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
-    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+keys = []
+
+# A list of available commands that can be bound to keys can be found
+# at https://docs.qtile.org/en/latest/manual/config/lazy.html
+# Switch between windows
+for key in ["h", "a", "Left"]:
+    keys.append(Key([mod], key, lazy.layout.left(), desc="Move focus to left"))
+    keys.append(Key([mod, "shift"], key, lazy.layout.shuffle_left(), desc="Move window to the left"))
+    keys.append(Key([mod, "control"], key, lazy.layout.grow_left(), desc="Grow window to the left"))
+for key in ["l", "d", "Right"]:
+    keys.append(Key([mod], key, lazy.layout.right(), desc="Move focus to right"))
+    keys.append(Key([mod, "shift"], key, lazy.layout.shuffle_right(), desc="Move window to the right"))
+    keys.append(Key([mod, "control"], key, lazy.layout.grow_right(), desc="Grow window to the right"))
+for key in ["j", "s", "Down"]:
+    keys.append(Key([mod], key, lazy.layout.down(), desc="Move focus down"))
+    keys.append(Key([mod, "shift"], key, lazy.layout.shuffle_down(), desc="Move window down"))
+    keys.append(Key([mod, "control"], key, lazy.layout.grow_down(), desc="Grow window down"))
+for key in ["k", "w", "Up"]:
+    keys.append(Key([mod], key, lazy.layout.up(), desc="Move focus up"))
+    keys.append(Key([mod, "shift"], key, lazy.layout.shuffle_up(), desc="Move window up"))
+    keys.append(Key([mod, "control"], key, lazy.layout.grow_up(), desc="Grow window up"))
+
+keys.extend([
+    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     Key([mod], "equal", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -78,7 +80,9 @@ keys = [
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-]
+    Key([mod, "shift"], "q", lazy.spawn(lock_cmd), desc="Lock the screen"),
+    Key([mod, "shift"], "e", lazy.spawn(logout_cmd), desc="Exit Qtile"),
+    ])
 
 groups = [Group(i) for i in "123456789"]
 
@@ -147,11 +151,21 @@ screens = [
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                widget.TextBox("put stuff here", name="default"),
+                widget.DF(fmt="🐧 {}", partition="/", visible_on_warn=False),
+                widget.DF(fmt="🏠 {}", partition="/home", visible_on_warn=False),
+                widget.CPU(fmt="🤖 {}"),
+                #widget.CPUGraph(),
+                widget.Memory(fmt="🐏 {}"),
+                #widget.MemoryGraph(),
+                widget.NetGraph(),
+                #widget.BatteryIcon(),
+                widget.Battery(fmt="🔋 {}"),
                 widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                widget.Clock(format="🗓 %Y-%m-%d %a %I:%M %p"),
+                #widget.QuickExit(
+                #    default_text='🔨', countdown_format='[{}]'
+                #    ),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
@@ -204,3 +218,13 @@ wl_input_rules = None
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
+
+# Start programs on login
+import subprocess
+from libqtile import hook
+
+@hook.subscribe.startup_once
+def autostart():
+    home = os.path.expanduser('~/.local/linux-conf/qtile/autostart.sh')
+    subprocess.Popen([home])
+

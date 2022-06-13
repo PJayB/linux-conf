@@ -2,7 +2,7 @@
 
 ## Install
 
-    sudo pip3 install xcffib qtile
+    sudo pip3 install xcffib qtile psutil
     sudo cp qtile.desktop /usr/share/xsessions/
     mkdir -p ~/.config/qtile
     ln -s $(pwd)/config.py ~/.config/qtile/
