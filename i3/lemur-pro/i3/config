@@ -201,7 +201,7 @@ bindsym $mod+grave scratchpad show
 exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/lock.sh
 
 # Start compositor
-exec --no-startup-id ~/.local/bin/picom --experimental-backends --config ~/.config/i3/picom.conf -b
+exec --no-startup-id picom --experimental-backends --config ~/.config/i3/picom.conf -b
 
 # Restore wallpaper
 exec --no-startup-id variety
