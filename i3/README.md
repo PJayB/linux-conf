@@ -19,9 +19,13 @@ Prerequisites:
 
 Animated windows through picom: https://github.com/Arian8j2/picom-jonaburg-fix
 
+Betterlockscreen: https://github.com/betterlockscreen/betterlockscreen.git
+  * betterlockscreen x11-utils feh graphicsmagick i3lock-color (https://github.com/Raymo111/i3lock-color)
+  * i3lock-color: https://github.com/Raymo111/i3lock-color
+
+
 To-Do:
 
 * i3status update on media keys
-* betterlockscreen x11-utils feh graphicsmagick i3lock-color (https://github.com/Raymo111/i3lock-color)
 * automatic display detection
 
