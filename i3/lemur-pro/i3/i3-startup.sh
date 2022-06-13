@@ -1,23 +1,26 @@
 #!/bin/bash
-log_tag="i3-autostart"
-
 die() {
     # print to syslog & stderr
-    logger -t "$log_tag" -s "$*"
+    echo "$*" >&2
 
     # abort
     exit 1
 }
 
-logdir="$HOME/.config/i3-autostart-logs"
+logdir="$HOME/.cache/i3-autostart-logs"
 mkdir -p "$logdir" || die "Failed to create $logdir"
+
+# Redirect this script's output to a file
+if [ ! -t 0 ]; then
+    exec >"$logdir/autostart.log" 2>&1
+fi
 
 pids=( )
 
 run_detached() {
     name="$(basename "$1")"
     [ -n "$name" ] || die "Couldn't detect base name of '$1'"
-    logger -t "$log_tag" "Starting: $*"
+    echo "Starting: $*"
     nohup "$@" </dev/null >"$logdir/$name.log" 2>&1 &
     pids+=( $! )
 }
@@ -50,4 +53,6 @@ run_detached nm-applet
 
 # Start dunst
 run_detached dunst -config "$dunst_config_dir/dunstrc"
+
+echo "Done."
 
