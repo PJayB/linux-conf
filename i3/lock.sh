@@ -1,9 +1,18 @@
 #!/bin/bash
 wpaper="$HOME/.config/i3/lock-screen.png"
-#$(gsettings get org.gnome.desktop.background picture-uri | sed -nr "s|'file://(.*)'|\1|p")
-if [ -f "$wpaper" ]; then
-    wpaper=("--image=$wpaper" "--tiling")
+if which betterlockscreen ; then
+    if [ -f "$wpaper" ]; then
+        wpaper=( dim -u "$wpaper" )
+    else
+        wpaper=( color "--color" "000000")
+    fi
+    betterlockscreen -l "${wpaper[@]}"
 else
-    wpaper=("--color=000000")
+    if [ -f "$wpaper" ]; then
+        wpaper=("--image=$wpaper" "--tiling")
+    else
+        wpaper=("--color=000000")
+    fi
+    i3lock --show-failed-attempts --ignore-empty-password "${wpaper[@]}"
 fi
-i3lock --show-failed-attempts --ignore-empty-password "${wpaper[@]}"
+
