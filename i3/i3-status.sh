@@ -1,6 +1,6 @@
 #!/bin/bash
 
-current_audio_sink() {
+pulse_current_audio_sink() {
     default_sink="$(pactl get-default-sink)"
     [ -n "$default_sink" ] || return
     desc="$(pacmd list-sinks | grep -Pzo \
@@ -8,6 +8,18 @@ current_audio_sink() {
         --color=never | tail -n 1 | cut -f2 -d\")"
     if [ -n "$desc" ]; then
         echo -n ',{"name":"audiosink","full_text":"'"$desc"'"}'
+    fi
+}
+
+pipewire_current_audio_sink() {
+    echo -n ',{"name":"audiosink","full_text":"Pipewire TODO"}'
+}
+
+current_audio_sink() {
+    if pidof pipewire >/dev/null 2>&1 ; then
+        pipewire_current_audio_sink
+    else
+        pulse_current_audio_sink
     fi
 }
 
