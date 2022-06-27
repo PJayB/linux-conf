@@ -25,6 +25,10 @@ Betterlockscreen: https://github.com/betterlockscreen/betterlockscreen.git
   * betterlockscreen x11-utils feh graphicsmagick i3lock-color (https://github.com/Raymo111/i3lock-color)
   * i3lock-color: https://github.com/Raymo111/i3lock-color
 
+i3-layouts: https://github.com/eliep/i3-layouts
+  * xdotool
+  * pip install --user i3-layouts
+
 
 To-Do:
 

@@ -201,12 +201,17 @@ bindsym $mod+grave scratchpad show
 exec --no-startup-id ~/.config/i3/i3-startup.sh
 
 # Override for keyboards without media keys
-bindsym $mod+F9 exec playerctl play-pause
-bindsym $mod+Shift+F12 exec playerctl next
-bindsym $mod+Shift+F11 playerctl previous
+bindsym $mod+F9 exec --no-startup-id playerctl play-pause
+bindsym $mod+Shift+F12 exec --no-startup-id playerctl next
+bindsym $mod+Shift+F11 exec --no-startup-id playerctl previous
 bindsym $mod+F12 exec --no-startup-id ~/.config/i3/volume-adjust.sh +5%
 bindsym $mod+F11 exec --no-startup-id ~/.config/i3/volume-adjust.sh -5%
 bindsym $mod+F10 exec --no-startup-id ~/.config/i3/volume-adjust.sh togglemute
+
+# Wallpaper control
+bindsym $mod+Shift+T exec --no-startup-id ~/.config/i3/wallpaper.sh trash
+bindsym $mod+Shift+N exec --no-startup-id ~/.config/i3/wallpaper.sh next
+bindsym $mod+Shift+F exec --no-startup-id ~/.config/i3/wallpaper.sh fav
 
 # https://thomashunter.name/i3-configurator/
 
