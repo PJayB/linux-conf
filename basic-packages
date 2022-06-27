@@ -41,6 +41,8 @@ p7zip-plugins       | yum dnf
 epel-release        | yum
 perf                | yum dnf
 neovim              | apt-get yum dnf pacman
+glx-utils           | yum
+mesa-demos          | yum
 
 # Debian stuff
 apt-find            | apt-get                       !rpi
