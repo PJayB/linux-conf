@@ -38,7 +38,7 @@ run_detached picom --experimental-backends --config "$i3_config_dir/picom.conf" 
 run_detached variety --resume
 
 # Start pulse audio
-run_detached start-pulseaudio-x11
+#run_detached start-pulseaudio-x11
 
 # Start bluetooth applet
 run_detached blueman-applet

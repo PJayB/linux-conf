@@ -16,10 +16,10 @@ pipewire_current_audio_sink() {
 }
 
 current_audio_sink() {
-    if pidof pipewire >/dev/null 2>&1 ; then
-        pipewire_current_audio_sink
-    else
+    if pidof pulseaudio >/dev/null 2>&1 ; then
         pulse_current_audio_sink
+    elif pidof pipewire >/dev/null 2>&1 ; then
+        pipewire_current_audio_sink
     fi
 }
 
