@@ -52,7 +52,7 @@ run_detached nm-applet
 run_detached dunst -config "$dunst_config_dir/dunstrc"
 
 # Set Caps Lock to mean escape
-setxkbmap -layout us -option caps:escape
+#setxkbmap -layout us -option caps:escape
 
 echo "Done."
 
