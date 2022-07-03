@@ -10,7 +10,7 @@ shell:
     - --login
 window:
   decorations: full
-  opacity: 0.9
+  opacity: 0.6
 draw_bold_text_with_bright_colors: true
 save_to_clipboard: true
 cursor:
@@ -20,3 +20,6 @@ cursor:
   blink_interval: 666
 mouse:
   hide_when_typing: true
+key_bindings:
+  - { key: Return,    mods: Shift,    chars:"\x1b" }
+
