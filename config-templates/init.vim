@@ -77,6 +77,6 @@ vnoremap <S-Down> <Down>
 vnoremap <S-Up> <Up>
 
 " Save habit
-inoremap <C-s> <cmd>:w<CR>
+inoremap <C-s> <cmd>:w<CR><ESC>
 nnoremap <C-s> <cmd>:w<CR>
 
