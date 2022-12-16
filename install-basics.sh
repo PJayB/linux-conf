@@ -23,7 +23,7 @@ fi
 
 # WSL doesn't have some packages
 is_wsl=
-if uname -r | grep "Microsoft"; then
+if uname -r | grep -i "Microsoft"; then
     is_wsl=yes
     filters+=( "!wsl" )
 fi
@@ -103,7 +103,7 @@ if which snap >/dev/null; then
 fi
 
 # Set up WSL-specific stuff
-if uname -r | grep "Microsoft"; then
+if uname -r | grep -i "Microsoft"; then
     sudo apt-get purge -y openssh-server
     sudo apt-get install -y openssh-server
     echo "PermitRootLogin no
