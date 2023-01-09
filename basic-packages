@@ -1,5 +1,5 @@
 # Essentials
-playerctl           | apt-get
+playerctl           | apt-get !wsl
 patchelf            | apt-get
 debootstrap         | apt-get
 schroot             | apt-get
@@ -8,7 +8,7 @@ ethtool             | apt-get
 sponge              | apt-get         !wsl
 git                 | apt-get yum dnf pacman brew
 git-gui             | apt-get yum dnf        brew
-git-lfs             | apt-get yum dnf pacman brew
+git-lfs             | apt-get yum dnf pacman brew !wsl
 wget                | apt-get yum dnf pacman brew     
 curl                | apt-get yum dnf pacman brew     
 tmux                | apt-get yum dnf pacman brew     
@@ -39,7 +39,7 @@ p7zip-full          | apt-get yum
 p7zip-plugins       | yum dnf
 epel-release        | yum
 perf                | yum dnf
-neovim              | apt-get yum dnf pacman
+neovim              | apt-get yum dnf pacman !wsl
 glx-utils           | yum
 mesa-demos          | yum
 
@@ -59,6 +59,6 @@ toilet              | apt-get
 espeak              | apt-get
 
 # Eon stuff
-fzf                 | apt-get
+fzf                 | apt-get !wsl
 tree                | apt-get
 
