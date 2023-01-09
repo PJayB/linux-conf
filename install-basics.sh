@@ -61,14 +61,14 @@ else
 fi
 
 # Set up Fedora SSH server
-if [ "$PKGMAN" != "brew" ]; then
-    sudo systemctl enable --now sshd.service
+if [ "$PKGMAN" = "yum" ]; then
+    sudo systemctl enable --now sshd.service || :
 fi
 
-git lfs install || :
+# git lfs install || :
 
 # Emoji picker
-pip3 install tuimoji || :
+# pip3 install tuimoji || :
 
 # Arch setup
 # (disabled for now)
@@ -89,21 +89,8 @@ if false && [ "$PKGMAN" = "pacman" ]; then
     fi
 fi
 
-# Debian setup
-if which update-alternatives && which alacritty ; then
-    sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$(which alacritty)" 50
-fi
-
-mkdir -p "$HOME/bin"
-cd "$HOME/bin"
-
-# Terminal
-if which snap >/dev/null; then
-	sudo snap install alacritty --classic
-fi
-
-# Set up WSL-specific stuff
-if uname -r | grep -i "Microsoft"; then
+# Set up WSL-specific stuff (disabled)
+if false && uname -r | grep -i "Microsoft"; then
     sudo apt-get purge -y openssh-server
     sudo apt-get install -y openssh-server
     echo "PermitRootLogin no

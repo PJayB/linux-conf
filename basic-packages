@@ -5,7 +5,7 @@ debootstrap         | apt-get
 schroot             | apt-get
 net-tools           | apt-get
 ethtool             | apt-get
-sponge              | apt-get         !wsl
+sponge              | apt-get         !wsl !rpi
 git                 | apt-get yum dnf pacman brew
 git-gui             | apt-get yum dnf        brew
 git-lfs             | apt-get yum dnf pacman brew !wsl
