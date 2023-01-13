@@ -14,6 +14,13 @@ fi
 
 filters=( )
 
+# ARM doesn't have some packages
+is_arm=
+if uname -m | grep -q 'aarch64'; then
+    is_arm=yes
+    filters+=( "!arm" )
+fi
+
 # Raspbian doesn't have some packages
 is_rpi=
 if which lsb_release >/dev/null && lsb_release -i | grep -q 'Raspbian'; then
@@ -32,7 +39,7 @@ filters="(^#)$(printf "|(%s)" "${filters[@]}")"
 
 # These packages don't exist on WSL or Raspbian
 LINUX_TOOLS_PACKAGES=
-if [ -z "$is_rpi" ] && [ -z "$is_wsl" ]; then
+if [ -z "$is_arm" ] && [ -z "$is_rpi" ] && [ -z "$is_wsl" ]; then
 	LINUX_TOOLS_PACKAGES="linux-tools-$(uname -r) linux-cloud-tools-$(uname -r)"
 fi
 
@@ -43,7 +50,7 @@ else
 fi
 
 if [ "$PKGMAN" = "apt-get" ]; then
-    sudo $PKGMAN update
+    # sudo $PKGMAN update
     sudo $PKGMAN install -y $PACKAGES $LINUX_TOOLS_PACKAGES
 elif [ "$PKGMAN" = "yum" ]; then
     sudo $PKGMAN install -y $PACKAGES

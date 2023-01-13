@@ -5,7 +5,7 @@ debootstrap         | apt-get
 schroot             | apt-get
 net-tools           | apt-get
 ethtool             | apt-get
-sponge              | apt-get         !wsl !rpi
+sponge              | apt-get         !wsl !rpi !arm
 git                 | apt-get yum dnf pacman brew
 git-gui             | apt-get yum dnf        brew
 git-lfs             | apt-get yum dnf pacman brew !wsl
@@ -27,7 +27,7 @@ openssh-server      | apt-get yum dnf
 openssh             |                 pacman
 arandr              | apt-get
 xclip               | apt-get yum dnd pacman
-linux-tools-common  | apt-get                       !rpi !wsl
+linux-tools-common  | apt-get                       !rpi !wsl !arm
 tweak               | apt-get
 apcalc              | apt-get
 htop                | apt-get
@@ -44,7 +44,7 @@ glx-utils           | yum
 mesa-demos          | yum
 
 # Debian stuff
-apt-find            | apt-get                       !rpi !wsl
+apt-find            | apt-get                       !rpi !wsl !arm
 apt-file            | apt-get
 build-essential     | apt-get
 dconf-editor        | apt-get
