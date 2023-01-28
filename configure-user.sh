@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 
 mkdir -p ~/.ssh
 mkdir -p ~/.config/micro
@@ -41,11 +41,8 @@ else
     echo "bashrc already configured"
 fi
 
-if [ ! -f ~/.zshrc ] || ! grep -Eq 'basics-setup' ~/.zshrc; then
+if ! grep -Eq 'basics-setup' ~/.zshrc; then
     echo "Configuring zshrc"
-    if [ ! -f ~/.zshrc ] ; then
-        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    fi
     echo "# basics-setup" >> ~/.zshrc
     echo ". $(pwd)/config-templates/zshrc" >> ~/.zshrc
     echo ". $(pwd)/config-templates/aliases" >> ~/.zshrc
