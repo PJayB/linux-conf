@@ -31,8 +31,6 @@ linux-tools-common  | apt-get                       !rpi !wsl !arm
 tweak               | apt-get
 apcalc              | apt-get
 htop                | apt-get
-auditd              | apt-get
-resolvconf          | apt-get
 trash-cli           | apt-get
 p7zip               | apt-get     dnf pacman brew 
 p7zip-full          | apt-get yum
