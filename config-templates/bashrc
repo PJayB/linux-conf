@@ -28,8 +28,11 @@ setupdir="$HOME/.local/linux-conf"
 toolsdir="$setupdir/tools"
 configdir="$setupdir/config-templates"
 
+# Gopath to avoid cluttering up ~
+export GOPATH="$HOME/.local/go"
+
 # Export PATH to toolsdir
-export PATH="$HOME/.local/bin:$HOME/bin:$toolsdir:$PATH"
+export PATH="$HOME/.local/bin:$HOME/bin:$GOPATH/bin:$toolsdir:$PATH"
 
 # Disk space warning
 #df -PT | grep -vE 'squashfs|tmpfs|/boot' | awk --posix '{
