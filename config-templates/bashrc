@@ -56,3 +56,8 @@ if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]
     fi
 fi
 
+if [ "$(ls -di)" != "2 /" ]; then
+    container_name="container"
+    [ -x /usr/bin/lsb_release ] && container_name="$(lsb_release -cs)"
+    PS1="(${container_name}) $PS1"
+fi
