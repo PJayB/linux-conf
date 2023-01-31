@@ -14,6 +14,7 @@ curl                | apt-get yum dnf pacman brew
 tmux                | apt-get yum dnf pacman brew     
 #screen              | apt-get yum dnf
 python3-pip         | apt-get yum dnf
+python3-venv        | apt-get yum dnf
 #gdb                 | apt-get yum dnf
 #binutils            | apt-get yum dnf
 #gcc                 | apt-get yum dnf
