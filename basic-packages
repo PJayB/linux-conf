@@ -37,7 +37,7 @@ p7zip-full          | apt-get yum
 p7zip-plugins       | yum dnf
 epel-release        | yum
 #perf                | yum dnf
-neovim              | apt-get yum dnf pacman !wsl
+neovim              | apt-get yum dnf pacman
 #glx-utils           | yum
 #mesa-demos          | yum
 
