@@ -75,7 +75,7 @@ mkdir -vp "$CODEPATH"
 cp -vnr $(pwd)/config-templates/vscode/* "$CODEPATH/"
 
 mkdir -p "$HOME/.local/bin"
-rsync -vac "$(pwd)/tools/" "$HOME/.local/bin"
+#rsync -vac "$(pwd)/tools/" "$HOME/.local/bin"
 
 if which alacritty ; then
     update-alternatives --set x-terminal-emulator "$(which alacritty)"
