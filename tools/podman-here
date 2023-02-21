@@ -1,0 +1,33 @@
+#!/bin/bash
+
+here="$(pwd)"
+
+podman_run=(
+    podman
+    run
+    -i
+    "-v${here}:${here}"
+)
+
+podman_args=()
+while [ -n "$1" ]; do
+    arg="$1"
+    shift
+
+    if [ "${arg}" == "--" ]; then
+        break
+    else
+        podman_args+=( "${arg}" )
+    fi
+done
+
+podman_args+=(
+    /bin/sh -c "cd ${here} && /bin/bash"
+)
+
+if [ -n "$1" ]; then
+    echo "$@" | "${podman_run[@]}" "${podman_args[@]}"
+else
+    "${podman_run[@]}" -t "${podman_args[@]}"
+fi
+
