@@ -1,0 +1,8 @@
+#!/bin/bash
+die() { echo "$*" >&2 ; exit 1 ; }
+
+if [ -n "$1" ]; then
+    podman ps --filter "ancestor=localhost/$1" --latest
+else
+    podman ps --latest
+fi
