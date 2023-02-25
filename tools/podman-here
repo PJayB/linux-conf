@@ -8,25 +8,13 @@ podman_run=(
     "-v${here}:${here}"
 )
 
-podman_args=()
-while [ -n "$1" ]; do
-    arg="$1"
-    shift
+cd_then_pipe() {
+    echo "cd '${here}'"
+    cat
+}
 
-    if [ "${arg}" == "--" ]; then
-        break
-    else
-        podman_args+=( "${arg}" )
-    fi
-done
-
-podman_args+=(
-    /bin/sh -c "cd ${here} && /bin/bash"
-)
-
-if [ -n "$1" ]; then
-    echo "$@" | "${podman_run[@]}" "${podman_args[@]}"
+if [ -t 0 ]; then
+    "${podman_run[@]}" -it "$@" /bin/sh -c "cd '${here}' && /bin/bash"
 else
-    "${podman_run[@]}" "${podman_args[@]}"
+    cd_then_pipe | "${podman_run[@]}" -i "$@" "/bin/bash"
 fi
-
