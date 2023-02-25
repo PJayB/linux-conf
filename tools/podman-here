@@ -5,7 +5,6 @@ here="$(pwd)"
 podman_run=(
     podman
     run
-    -i
     "-v${here}:${here}"
 )
 
@@ -28,6 +27,6 @@ podman_args+=(
 if [ -n "$1" ]; then
     echo "$@" | "${podman_run[@]}" "${podman_args[@]}"
 else
-    "${podman_run[@]}" -t "${podman_args[@]}"
+    "${podman_run[@]}" "${podman_args[@]}"
 fi
 
