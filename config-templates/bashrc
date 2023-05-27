@@ -46,7 +46,7 @@ source "$configdir/aliases"
 
 # NOTE: must be at the end (aborts here if not interactive)
 [[ $- != *i* ]] && return
-TMUXBIN=$(which tmux)
+TMUXBIN=$(which tmux 2>/dev/null)
 if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
     ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
     if [[ -z "$ID" ]] ;then # if not available create a new one
