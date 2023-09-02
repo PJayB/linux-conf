@@ -1,0 +1,31 @@
+#!/bin/bash
+die() { echo "$*" >&2 ; exit 1 ; }
+here="$(dirname "$(basename "$0")")"
+source="$here/Journal"
+target="$here/Journal.mount"
+if [ "$1" == "open" ]; then
+    if mountpoint -q "$target" ; then
+        die "Already mounted."
+    fi
+    mkdir -p "$target" || die "Failed to create $target"
+    sudo cryptsetup luksOpen "$source" journal || die "Failed to open $source"
+    sudo mount "/dev/mapper/journal" "$target" || die "Failed to mount"
+
+    marktextFlatpak=com.github.marktext.marktext
+    if flatpak list --app | grep -q "$marktextFlatpak"; then
+        nohup flatpak run "$marktextFlatpak" "$target" >/dev/null &
+    fi
+elif [ "$1" == "close" ]; then
+    sudo umount "$target" || die "Failed to umount $target"
+    sudo cryptsetup luksClose journal || die "Failed to close"
+
+    # ensure all files are gone!
+    wc="$(find "$target" -mindepth 1 | wc -l)"
+    if [ "$wc" != "0" ]; then
+        echo "Warning: directory doesn't appear to be empty!" >&2
+    fi
+
+    echo | xclip # clear clipboard, just in case
+else
+    die "Expected: open or close"
+fi
