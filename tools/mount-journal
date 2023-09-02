@@ -13,7 +13,7 @@ if [ "$1" == "open" ]; then
 
     marktextFlatpak=com.github.marktext.marktext
     if flatpak list --app | grep -q "$marktextFlatpak"; then
-        nohup flatpak run "$marktextFlatpak" "$target" >/dev/null &
+        nohup flatpak run "$marktextFlatpak" "$target" >/dev/null 2>&1 &
     fi
 elif [ "$1" == "close" ]; then
     sudo umount "$target" || die "Failed to umount $target"
