@@ -3,7 +3,8 @@ die() { echo "$*" >&2 ; exit 1 ; }
 here="$(dirname "$(basename "$0")")"
 source="$here/Journal"
 target="$here/Journal.mount"
-marktextFlatpak=com.github.marktext.marktext
+#editorFlatpak=com.github.marktext.marktext
+editorCommand=code
 
 open_journal() {
     if mountpoint -q "$target" ; then
@@ -14,15 +15,31 @@ open_journal() {
     sudo mount "/dev/mapper/journal" "$target" || die "Failed to mount"
 }
 
-open_marktext() {
-    flatpak list --app | grep -q "$marktextFlatpak" || \
-        die "Marktext not installed"
-    flatpak run "$marktextFlatpak" "$target" >/dev/null 2>&1
+open_editor() {
+    if [ -n "$editorFlatpak" ]; then
+        flatpak list --app | grep -q "$editorFlatpak" || \
+            die "$editorFlatpak not installed"
+        flatpak run "$editorFlatpak" "$target" >/dev/null 2>&1
+    elif [ -n "$editorCommand" ]; then
+        "$editorCommand" "$target"
+        if [ "$editorCommand" == "code" ]; then
+            die "'code' doesn't open synchronously, so aborting here. " \
+                "You'll have to manually re-lock the journal."
+        fi
+    else
+        die "Need to specify editorCommand or editorFlatpak"
+    fi
 }
 
-open_marktext_async() {
-    if flatpak list --app | grep -q "$marktextFlatpak"; then
-        nohup flatpak run "$marktextFlatpak" "$target" >/dev/null 2>&1 &
+open_editor_async() {
+    if [ -n "$editorFlatpak" ]; then
+        if flatpak list --app | grep -q "$editorFlatpak"; then
+            nohup flatpak run "$editorFlatpak" "$target" >/dev/null 2>&1 &
+        fi
+    elif [ -n "$editorCommand" ]; then
+        nohup "$editorCommand" "$target" >/dev/null 2>&1 &
+    else
+        die "Need to specify editorCommand or editorFlatpak"
     fi
 }
 
@@ -43,13 +60,13 @@ check_closed() {
 
 if [ "$1" == "open" ]; then
     open_journal
-    open_marktext_async
+    open_editor_async
 elif [ "$1" == "close" ]; then
     close_journal
     check_closed
 elif [ -z "$1" ]; then
     open_journal
-    open_marktext
+    open_editor
     close_journal
     check_closed
 else
