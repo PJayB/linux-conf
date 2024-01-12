@@ -60,15 +60,6 @@ if [ "x$(uname -s)" = "xDarwin" ]; then
     CODEPATH="$HOME/Library/Application Support/Code/User"
 else
     CODEPATH="$HOME/.config/Code/User"
-    gsettings set org.gnome.desktop.interface gtk-enable-primary-paste false
-    gsettings set org.gnome.desktop.wm.preferences button-layout "':minimize,maximize,close'"
-    gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "['<Super>t']"
-    gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
-    gsettings set org.gnome.desktop.wm.keybindings switch-windows-backward "['<Shift><Alt>Tab']"
-    gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Shift><Super>Tab']"
-    gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Super>Tab']"
-
-    dconf load /org/gnome/terminal/legacy/profiles:/ < config-templates/gnome-terminal-profiles.dconf
 fi
 
 mkdir -vp "$CODEPATH"
