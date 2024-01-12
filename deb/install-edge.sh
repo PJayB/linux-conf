@@ -11,4 +11,4 @@ fi
 sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'
 
 sudo apt-get update
-sudo apt-get install -y edge-stable
+sudo apt-get install -y microsoft-edge-stable
