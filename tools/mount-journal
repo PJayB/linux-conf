@@ -6,6 +6,10 @@ target="$here/Journal.mount"
 #editorFlatpak=com.github.marktext.marktext
 editorCommand=code
 
+trap_close() {
+    sleep 1
+}
+
 open_journal() {
     if mountpoint -q "$target" ; then
         die "Already mounted."
@@ -23,8 +27,10 @@ open_editor() {
     elif [ -n "$editorCommand" ]; then
         "$editorCommand" "$target"
         if [ "$editorCommand" == "code" ]; then
-            die "'code' doesn't open synchronously, so aborting here. " \
-                "You'll have to manually re-lock the journal."
+            echo "'code' doesn't open synchronously, so press Ctrl+C to " \
+                "re-lock the journal."
+            trap 'trap_close' SIGINT
+            cat || :
         fi
     else
         die "Need to specify editorCommand or editorFlatpak"
