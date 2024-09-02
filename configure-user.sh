@@ -3,6 +3,7 @@
 
 mkdir -p ~/.ssh
 mkdir -p ~/.config/micro
+mkdir -p ~/.config/tilde
 mkdir -p $HOME/.config/alacritty
 mkdir -p $HOME/.config/nvim
 
@@ -16,6 +17,7 @@ mkdir -p $HOME/.config/nvim
 [ -e ~/.config/micro/bindings.json ] || ln -sv $(pwd)/config-templates/micro-bindings.json ~/.config/micro/bindings.json
 [ -e ~/.config/micro/settings.json ] || ln -sv $(pwd)/config-templates/micro-settings.json ~/.config/micro/settings.json
 [ -e ~/.config/alacritty/alacritty.yml ] || ln -sv $(pwd)/config-templates/alacritty.yml ~/.config/alacritty/alacritty.yml
+[ -e ~/.config/tilde/config ] || ln -sv $(pwd)/config-templates/tilde.config ~/.config/tilde/config
 
 #if [ "$TERM" != "cygwin" ]; then
 #    sudo cp -v config-templates/lynx.cfg /etc/lynx.cfg
