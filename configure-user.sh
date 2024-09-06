@@ -1,13 +1,19 @@
 #!/bin/bash
 #set -e
 
+if uname -s | grep -qi -e mingw -e cygwin ; then
+	nvim_cfg="$HOME/AppData/Local/nvim"
+else
+	nvim_cfg="$HOME/.config/nvim"
+fi
+
 mkdir -p ~/.ssh
 mkdir -p ~/.config/micro
 mkdir -p ~/.config/tilde
 mkdir -p $HOME/.config/alacritty
-mkdir -p $HOME/.config/nvim
+mkdir -p "$nvim_cfg"
 
-[ -e ~/.config/nvim/init.vim ] || ln -sv $(pwd)/config-templates/init.vim ~/.config/nvim/init.vim
+[ -e "${nvim_cfg}/init.vim" ] || ln -sv $(pwd)/config-templates/init.vim "${nvim_cfg}/init.vim"
 [ -e ~/.vimrc ] || ln -sv $(pwd)/config-templates/vimrc ~/.vimrc
 [ -e ~/.calcrc ] || ln -sv $(pwd)/config-templates/calcrc ~/.calcrc
 [ -e ~/.nanorc ] || ln -sv $(pwd)/config-templates/nanorc ~/.nanorc
@@ -24,8 +30,7 @@ mkdir -p $HOME/.config/nvim
 #fi
 
 # nvim config
-nvim_cfg="$HOME/.local/share/nvim"
-nvim_plug="$nvim_cfg/site/autoload/plug.vim"
+nvim_plug="$nvim_cfg/autoload/plug.vim"
 if [ ! -f "$nvim_plug" ] && which nvim; then
 	sh -c "curl -fLo '${nvim_plug}' --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
@@ -64,8 +69,10 @@ else
     CODEPATH="$HOME/.config/Code/User"
 fi
 
-mkdir -vp "$CODEPATH"
-cp -vnr $(pwd)/config-templates/vscode/* "$CODEPATH/"
+if [ -d "$(pwd)/config-templates/vscode" ]; then
+    mkdir -vp "$CODEPATH"
+    cp -vnr "$(pwd)/config-templates/vscode/"* "$CODEPATH/"
+fi
 
 mkdir -p "$HOME/.local/bin"
 #rsync -vac "$(pwd)/tools/" "$HOME/.local/bin"
