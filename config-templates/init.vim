@@ -80,3 +80,8 @@ vnoremap <S-Up> <Up>
 inoremap <C-s> <cmd>:w<CR><ESC>
 nnoremap <C-s> <cmd>:w<CR>
 
+" 'kj' backs out into normal mode
+inoremap kj <esc>
+vnoremap kj <esc>
+cnoremap kj <C-c><C-c>
+
