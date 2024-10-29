@@ -78,17 +78,18 @@ podman_volume_args=(
 )
 # Mount the custom script into the container too
 if [ -n "$container_script" ]; then
+    container_script="$( realpath "$container_script" )"
     podman_volume_args+=( "-v$container_script:$container_script" )
 fi
 
 # Add the environment variables to the podman command lines
 podman_args=( run -i "${podman_volume_args[@]}" )
-podman_build_args=( -t "$podman_image" )
+podman_build_args=( build -t "$podman_image" )
 for e in "${envvars[@]}" ; do
     podman_args+=( "--env" "$e" )
     podman_build_args+=( "--build-arg" "$e" )
 done
-podman_args+=( "$podman_image" /bin/bash )
+podman_args+=( "$podman_image" /bin/bash -l )
 podman_build_args+=( "${podman_volume_args[@]}" )
 
 init_container() {
@@ -102,7 +103,7 @@ init_container() {
     else
         [ -n "${container_init}" ] || die "Please specify --podman-init."
         [ -d "${container_init}" ] || die "${container_init} not found."
-        podman build "${podman_build_args[@]}" "${container_init}"
+        podman "${podman_build_args[@]}" "${container_init}"
     fi
 }
 
@@ -118,14 +119,14 @@ update_container() {
         echo " \
             cd '${here}' && \
             '${container_script}'" | \
-            podman "${podman_args[@]}" || die
+            podman "${podman_args[@]}"
 
         # Commit the image
         last_container="$(podman ps --filter "ancestor=localhost/$podman_image" \
             --latest --quiet)"
-        [ -n "$last_container" ] || die
+        [ -n "$last_container" ] || die "Failed to commit container: couldn't determine previous container id"
 
-        podman container commit "$last_container" "$podman_image" || die
+        podman container commit "$last_container" "$podman_image" || die "Failed to commit container"
     fi
 }
 
@@ -198,27 +199,27 @@ fi
 
 configure() {
     if [ -n "$is_msys" ]; then
-        "${configure_cmake[@]}" "${cmake_args[@]}" || die
+        "${configure_cmake[@]}" "${cmake_args[@]}"
     elif [ -n "$podman_image" ]; then
         echo \
             "cd '${here}' && " \
             "${configure_cmake[@]} $(printf "'%s' " "${cmake_args[@]}")" \
-            | podman "${podman_args[@]}" || die
+            | podman "${podman_args[@]}"
     else
-        "${configure_cmake[@]}" "${cmake_args[@]}" || die
+        "${configure_cmake[@]}" "${cmake_args[@]}"
     fi
 }
 
 build() {
     if [ -n "$is_msys" ]; then
-        "${build_cmake[@]}" "${builddir}" "${build_cmake_args[@]}" || die
+        "${build_cmake[@]}" "${builddir}" "${build_cmake_args[@]}"
     elif [ -n "$podman_image" ]; then
         echo \
             "cd '${here}' && " \
             "${build_cmake[@]} '${builddir}' ${build_cmake_args[@]} && echo 'Done.' " \
-            | podman "${podman_args[@]}" || die
+            | podman "${podman_args[@]}"
     else
-        "${build_cmake[@]}" "${builddir}" "${build_cmake_args[@]}" || die
+        "${build_cmake[@]}" "${builddir}" "${build_cmake_args[@]}"
     fi
 }
 
