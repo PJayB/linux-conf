@@ -32,16 +32,26 @@ required_arg() {
     echo "$2"
 }
 
-# Set the wine prefix, in case we need it
-export WINEPREFIX="${here}/.wine"
+optional_env() {
+    if [ -n "$1" ]; then
+        shift
+        echo "$@"
+    fi
+}
 
 og_args=( "$@" )
 cmake_args=()
 envvars=(
-    WINEPREFIX="$WINEPREFIX"
-    RUSTUP_HOME="$RUSTUP_HOME"
-    CARGO_HOME="$CARGO_HOME"
-    )
+    $(optional_env "$WINEPREFIX" --env WINEPREFIX="$WINEPREFIX")
+    $(optional_env "$RUSTUP_HOME" --env RUSTUP_HOME="$RUSTUP_HOME")
+    $(optional_env "$CARGO_HOME" --env CARGO_HOME="$CARGO_HOME")
+)
+mounts=(
+    $(optional_env "$WINEPREFIX" -v "$WINEPREFIX:$WINEPREFIX")
+    $(optional_env "$RUSTUP_HOME" -v "$RUSTUP_HOME:$RUSTUP_HOME")
+    $(optional_env "$CARGO_HOME" -v "$CARGO_HOME:$CARGO_HOME")
+)
+
 # Parse the options
 while true; do
     case "$1" in
@@ -54,6 +64,7 @@ while true; do
     --configure)        do_configure="yes" ;;
     --cmake-trace)      cmake_args+=( --trace-expand --check-system-vars --debug-find ) ;;
     -e|--env)           envvars+=( "$( required_arg "$1" "$2" )" ) ; shift ;;
+    -v|--mount)         mounts+=( "$( required_arg "$1" "$2" )" ) ; shift ;;
     --podman-init)      container_init="$( required_arg "$1" "$2" )" ; shift ;;
     --podman-update)    container_script="$( required_arg "$1" "$2" )" ; shift ;;
     --open-log)         open_log=yes ;;
@@ -75,6 +86,7 @@ fi
 # Set up common args for running stuff in the container
 podman_volume_args=(
     "-v$here:$here"
+    "${mounts[@]}"
 )
 # Mount the custom script into the container too
 if [ -n "$container_script" ]; then
