@@ -27,6 +27,14 @@ if [ "$(uname -o)" = "Msys" ]; then
     is_msys=1
 fi
 
+required_arg() {
+    [ -n "$2" ] || die "$1 requires an argument"
+    echo "$2"
+}
+
+# Set the wine prefix, in case we need it
+export WINEPREFIX="${here}/.wine"
+
 og_args=( "$@" )
 cmake_args=()
 envvars=(
@@ -37,17 +45,17 @@ envvars=(
 # Parse the options
 while true; do
     case "$1" in
-    -i|--podman-image)  podman_image="$2" ; shift ;;
-    -p|--preset)        cmake_preset="$2" ; shift ;;
-    -c|--config)        cmake_config="$2" ; shift ;;
+    -i|--podman-image)  podman_image="$( required_arg "$1" "$2" )" ; shift ;;
+    -p|--preset)        cmake_preset="$( required_arg "$1" "$2" )" ; shift ;;
+    -c|--config)        cmake_config="$( required_arg "$1" "$2" )" ; shift ;;
     --release)          cmake_config="RelWithDebInfo" ;;
     --final)            cmake_config="Release" ;;
     --emscripten)       is_emscripten="yes" ;;
     --configure)        do_configure="yes" ;;
     --cmake-trace)      cmake_args+=( --trace-expand --check-system-vars --debug-find ) ;;
-    -e|--env)           envvars+=( "$2" ) ; shift ;;
-    --podman-init)      container_init="$2" ; shift ;;
-    --podman-update)    container_script="$2" ; shift ;;
+    -e|--env)           envvars+=( "$( required_arg "$1" "$2" )" ) ; shift ;;
+    --podman-init)      container_init="$( required_arg "$1" "$2" )" ; shift ;;
+    --podman-update)    container_script="$( required_arg "$1" "$2" )" ; shift ;;
     --open-log)         open_log=yes ;;
     --help|-h|-?)       help ; exit 0 ;;
     --*)                help ; exit 1 ;;
@@ -63,6 +71,74 @@ fi
 if [ -z "$podman_image" ] && [ -n "$container_script" ]; then
     die "--podman-update requires --podman-image"
 fi
+
+# Set up common args for running stuff in the container
+podman_volume_args=(
+    "-v$here:$here"
+)
+# Mount the custom script into the container too
+if [ -n "$container_script" ]; then
+    podman_volume_args+=( "-v$container_script:$container_script" )
+fi
+
+# Add the environment variables to the podman command lines
+podman_args=( run -i "${podman_volume_args[@]}" )
+podman_build_args=( -t "$podman_image" )
+for e in "${envvars[@]}" ; do
+    podman_args+=( "--env" "$e" )
+    podman_build_args+=( "--build-arg" "$e" )
+done
+podman_args+=( "$podman_image" /bin/bash )
+podman_build_args+=( "${podman_volume_args[@]}" )
+
+init_container() {
+    [ -n "$podman_image" ] || die "podman_image not set"
+    [ -n "$container_init" ] || die "container_init not set"
+    [ -d "$container_init" ] || die "'$container_init' not found"
+    [ -f "$container_init/Dockerfile" ] || die "'$container_init/Dockerfile' not found"
+    [ -n "$podman_build_args" ] || die "podman_build_args not set"
+    if podman image exists "$podman_image" >/dev/null 2>&1 ; then
+        die "Container '${podman_image}' already exists."
+    else
+        [ -n "${container_init}" ] || die "Please specify --podman-init."
+        [ -d "${container_init}" ] || die "${container_init} not found."
+        podman build "${podman_build_args[@]}" "${container_init}"
+    fi
+}
+
+update_container() {
+    [ -n "$podman_image" ] || die "podman_image not set"
+    [ -n "$container_script" ] || die "container_script not set"
+    [ -f "$container_script" ] || die "'$container_script' not found"
+    [ -n "$podman_build_args" ] || die "podman_build_args not set"
+    if ! podman image exists "$podman_image" >/dev/null 2>&1 ; then
+        die "Container '${podman_image}' not found."
+    else
+        # Execute the script
+        echo " \
+            cd '${here}' && \
+            '${container_script}'" | \
+            podman "${podman_args[@]}" || die
+
+        # Commit the image
+        last_container="$(podman ps --filter "ancestor=localhost/$podman_image" \
+            --latest --quiet)"
+        [ -n "$last_container" ] || die
+
+        podman container commit "$last_container" "$podman_image" || die
+    fi
+}
+
+# Container operations skip cmake setup
+if [ -n "$container_init" ]; then
+    init_container
+    exit "$?"
+elif [ -n "$container_script" ]; then
+    update_container
+    exit "$?"
+fi
+
+
 
 # Msys only:
 # Reinvoke inside clang64 if we're not in that (emscripten needs the clang64
@@ -120,24 +196,6 @@ if [ -n "$open_log" ]; then
     code "$logfile"
 fi
 
-# Set the wine prefix, in case we need it
-export WINEPREFIX="${here}/.wine"
-
-# Set up common args for running stuff in the container
-podman_volume_args=(
-        "-v$here:$here"
-    )
-
-# Add the environment variables to the podman command lines
-podman_args=( run -i "${podman_volume_args[@]}" )
-podman_build_args=( -t "$podman_image" )
-for e in "${envvars[@]}" ; do
-    podman_args+=( "--env" "$e" )
-    podman_build_args+=( "--build-arg" "$e" )
-done
-podman_args+=( "$podman_image" /bin/bash )
-podman_build_args+=( "${podman_volume_args[@]}" )
-
 configure() {
     if [ -n "$is_msys" ]; then
         "${configure_cmake[@]}" "${cmake_args[@]}" || die
@@ -164,40 +222,7 @@ build() {
     fi
 }
 
-init_container() {
-    # Create the container if it doesn't exist
-    if podman image exists "$podman_image" >/dev/null 2>&1 ; then
-        die "Container '${podman_image}' already exists."
-    else
-        podman build "${podman_build_args[@]}" "${container_init}"
-    fi
-}
-
-update_container() {
-    # Create the container if it doesn't exist
-    if ! podman image exists "$podman_image" >/dev/null 2>&1 ; then
-        die "Container '${podman_image}' doesn't exist."
-    else
-        # Update dependencies
-        echo " \
-            cd '${here}' && \
-            '${container_init_script}'" | \
-            podman "${podman_args[@]}" || die
-
-        # Commit the image
-        last_container="$(podman ps --filter "ancestor=localhost/$podman_image" \
-            --latest --quiet)"
-        [ -n "$last_container" ] || die
-
-        podman container commit "$last_container" "$podman_image" || die
-    fi
-}
-
-if [ -n "$container_init" ]; then
-    init_container
-elif [ -n "$container_script" ]; then
-    update_container
-elif [ -n "$do_configure" ]; then
+if [ -n "$do_configure" ]; then
     configure 2>&1 | tee "$logfile"
 else
     build 2>&1 | tee "$logfile"
