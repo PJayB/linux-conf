@@ -68,10 +68,10 @@ while true; do
     --podman-init)      container_init="$( required_arg "$1" "$2" )" ; shift ;;
     --podman-update)    container_script="$( required_arg "$1" "$2" )" ; shift ;;
     --open-log)         open_log=yes ;;
-    --help|-h|-?)       help ; exit 0 ;;
-    --*)                help ; exit 1 ;;
-    --)                 break ;;
-    *)                  break ;;
+    --help|-h)          help ; exit 0 ;;
+    --)                 shift ; break ;;
+    '')                 break ;;
+    *)                  help ; exit 1 ;;
     esac
     shift
 done
