@@ -80,3 +80,8 @@ vnoremap <S-Up> <Up>
 inoremap <C-s> <cmd>:w<CR><ESC>
 nnoremap <C-s> <cmd>:w<CR>
 
+" Rebind ESC to other keys for convenience
+inoremap kj <esc>
+vnoremap kj <esc>
+cnoremap kj <C-C>
+
