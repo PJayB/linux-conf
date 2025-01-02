@@ -3,8 +3,11 @@ die() { echo "$*" >&2 ; exit 1 ; }
 here="$(dirname "$(basename "$0")")"
 source="$here/Journal"
 target="$here/Journal.mount"
+editorCommand="${JOURNAL_EDITOR:-nvim}"
 #editorFlatpak=com.github.marktext.marktext
-editorCommand=code
+#editorCommand=code
+#editorCommand=nvim
+#editorCommand=hx
 
 trap_close() {
     sleep 1
