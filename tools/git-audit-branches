@@ -1,0 +1,18 @@
+#!/bin/bash
+# Thanks to https://www.geeksforgeeks.org/how-to-clean-old-remote-git-branches/
+
+age="${1:-30}"
+
+# Get the current date minus N days
+THRESHOLD_DATE=$(date -d "${age} days ago" +%s)
+
+# Loop through remote branches
+for branch in $(git branch -r | grep -v '\->'); do
+    # Get the last commit date of the branch
+    LAST_COMMIT_DATE=$(git log -1 --format=%ct "${branch}")
+
+    # Check if the branch is older than the threshold
+    if [[ $LAST_COMMIT_DATE -lt $THRESHOLD_DATE ]]; then
+        echo "${branch}"
+    fi
+done

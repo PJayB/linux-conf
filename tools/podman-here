@@ -14,7 +14,7 @@ cd_then_pipe() {
 }
 
 if [ -t 0 ]; then
-    "${podman_run[@]}" -it "$@" /bin/sh -c "cd '${here}' && /bin/bash"
+    "${podman_run[@]}" -it "$@" /bin/sh -c "cd '${here}' && /bin/bash -l"
 else
-    cd_then_pipe | "${podman_run[@]}" -i "$@" "/bin/bash"
+    cd_then_pipe | "${podman_run[@]}" -i "$@" "/bin/bash" -l
 fi

@@ -1,0 +1,242 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+die() { echo "$*" >&2 ; exit 1 ; }
+
+help() {
+    echo "$0 [--options...]"
+    echo " -i, --podman-image <N>   Use this Podman image to build."
+    echo " -p, --preset <N>         Use this CMake preset to build."
+    echo " -c, --config             Use this CMake config to build."
+    echo " --release                Shorthand for '-c RelWithDebInfo'."
+    echo " --final                  Shorthand for '-c Release'."
+    echo " --emscripten             Use emcmake to build."
+    echo " --configure              Run CMake configure instead of building."
+    echo " --cmake-trace            Enable CMake tracing."
+    echo " -e, --env <K>=<V>        Set this environment var in the container (podman builds only)."
+    echo " --podman-init <PATH>     Create the container (doesn't build)."
+    echo " --podman-update <SCRIPT> Execute a script in the container (doesn't build)."
+    echo " --open-log               Open the log file in VSCode."
+    echo " --help                   Show this help."
+}
+
+here="$(realpath ".")"
+
+if [ "$(uname -o)" = "Msys" ]; then
+    is_msys=1
+fi
+
+required_arg() {
+    [ -n "$2" ] || die "$1 requires an argument"
+    echo "$2"
+}
+
+optional_env() {
+    if [ -n "$1" ]; then
+        shift
+        echo "$@"
+    fi
+}
+
+og_args=( "$@" )
+cmake_args=()
+envvars=(
+    $(optional_env "$WINEPREFIX" --env WINEPREFIX="$WINEPREFIX")
+    $(optional_env "$RUSTUP_HOME" --env RUSTUP_HOME="$RUSTUP_HOME")
+    $(optional_env "$CARGO_HOME" --env CARGO_HOME="$CARGO_HOME")
+)
+mounts=(
+    $(optional_env "$WINEPREFIX" -v "$WINEPREFIX:$WINEPREFIX")
+    $(optional_env "$RUSTUP_HOME" -v "$RUSTUP_HOME:$RUSTUP_HOME")
+    $(optional_env "$CARGO_HOME" -v "$CARGO_HOME:$CARGO_HOME")
+)
+
+# Parse the options
+while true; do
+    case "$1" in
+    -i|--podman-image)  podman_image="$( required_arg "$1" "$2" )" ; shift ;;
+    -p|--preset)        cmake_preset="$( required_arg "$1" "$2" )" ; shift ;;
+    -c|--config)        cmake_config="$( required_arg "$1" "$2" )" ; shift ;;
+    --release)          cmake_config="RelWithDebInfo" ;;
+    --final)            cmake_config="Release" ;;
+    --emscripten)       is_emscripten="yes" ;;
+    --configure)        do_configure="yes" ;;
+    --cmake-trace)      cmake_args+=( --trace-expand --check-system-vars --debug-find ) ;;
+    -e|--env)           envvars+=( "$( required_arg "$1" "$2" )" ) ; shift ;;
+    -v|--mount)         mounts+=( "$( required_arg "$1" "$2" )" ) ; shift ;;
+    --podman-init)      container_init="$( required_arg "$1" "$2" )" ; shift ;;
+    --podman-update)    container_script="$( required_arg "$1" "$2" )" ; shift ;;
+    --open-log)         open_log=yes ;;
+    --help|-h)          help ; exit 0 ;;
+    --)                 shift ; break ;;
+    '')                 break ;;
+    *)                  help ; exit 1 ;;
+    esac
+    shift
+done
+
+if [ -z "$podman_image" ] && [ -n "$container_init" ]; then
+    die "--podman-init requires --podman-image"
+fi
+if [ -z "$podman_image" ] && [ -n "$container_script" ]; then
+    die "--podman-update requires --podman-image"
+fi
+
+# Set up common args for running stuff in the container
+podman_volume_args=(
+    "-v$here:$here"
+    "${mounts[@]}"
+)
+# Mount the custom script into the container too
+if [ -n "$container_script" ]; then
+    container_script="$( realpath "$container_script" )"
+    podman_volume_args+=( "-v$container_script:$container_script" )
+fi
+
+# Add the environment variables to the podman command lines
+podman_args=( run -i "${podman_volume_args[@]}" )
+podman_build_args=( build -t "$podman_image" )
+for e in "${envvars[@]}" ; do
+    podman_args+=( "--env" "$e" )
+    podman_build_args+=( "--build-arg" "$e" )
+done
+podman_args+=( "$podman_image" /bin/bash -l )
+podman_build_args+=( "${podman_volume_args[@]}" )
+
+init_container() {
+    [ -n "$podman_image" ] || die "podman_image not set"
+    [ -n "$container_init" ] || die "container_init not set"
+    [ -d "$container_init" ] || die "'$container_init' not found"
+    [ -f "$container_init/Dockerfile" ] || die "'$container_init/Dockerfile' not found"
+    [ -n "$podman_build_args" ] || die "podman_build_args not set"
+    if podman image exists "$podman_image" >/dev/null 2>&1 ; then
+        die "Container '${podman_image}' already exists."
+    else
+        [ -n "${container_init}" ] || die "Please specify --podman-init."
+        [ -d "${container_init}" ] || die "${container_init} not found."
+        podman "${podman_build_args[@]}" "${container_init}"
+    fi
+}
+
+update_container() {
+    [ -n "$podman_image" ] || die "podman_image not set"
+    [ -n "$container_script" ] || die "container_script not set"
+    [ -f "$container_script" ] || die "'$container_script' not found"
+    [ -n "$podman_build_args" ] || die "podman_build_args not set"
+    if ! podman image exists "$podman_image" >/dev/null 2>&1 ; then
+        die "Container '${podman_image}' not found."
+    else
+        # Execute the script
+        echo " \
+            cd '${here}' && \
+            '${container_script}'" | \
+            podman "${podman_args[@]}"
+
+        # Commit the image
+        last_container="$(podman ps --filter "ancestor=localhost/$podman_image" \
+            --latest --quiet)"
+        [ -n "$last_container" ] || die "Failed to commit container: couldn't determine previous container id"
+
+        podman container commit "$last_container" "$podman_image" || die "Failed to commit container"
+    fi
+}
+
+# Container operations skip cmake setup
+if [ -n "$container_init" ]; then
+    init_container
+    exit "$?"
+elif [ -n "$container_script" ]; then
+    update_container
+    exit "$?"
+fi
+
+
+
+# Msys only:
+# Reinvoke inside clang64 if we're not in that (emscripten needs the clang64
+# environment)
+if [ -n "$is_msys" ] && [ "${MSYSTEM}" != "CLANG64" ] && [ -n "$is_emscripten" ]; then
+    # Run this script again, but in Clang64
+    MSYSTEM=CLANG64 exec bash -l -- "$0" "${og_args[@]}"
+
+    # Never returns
+fi
+
+# Set up the build directory
+if [ -n "${cmake_preset}" ]; then
+    [ -f "${here}/CMakePresets.json" ] || die "${here}/CMakePresets.json wasn't found."
+    builddir="${here}/build/${cmake_preset}"
+    logfile="$here/build/build.${cmake_preset}.log"
+else
+    [ -f "${here}/CMakePresets.json" ] && die "${here}/CMakePresets.json is present. Please specify a preset."
+    builddir="${here}/build"
+    logfile="$here/build/build.log"
+fi
+
+# Set up cmake
+build_cmake=( cmake --build )
+build_cmake_args=()
+configure_cmake=( cmake )
+if [ -n "$is_emscripten" ]; then
+	configure_cmake=( "emcmake" "cmake" )
+fi
+if [ -n "$cmake_config" ]; then
+    build_cmake_args+=( --config "$cmake_config" )
+fi
+if [ -n "${cmake_preset}" ]; then
+    cmake_args+=( --preset "${cmake_preset}" )
+fi
+
+# Run configure if the directory doesn't exist yet
+if [ ! -e "$builddir" ] && [ -z "$do_configure" ]; then
+    bash -l -- "$0" --configure "${og_args[@]}"
+fi
+
+# Add the cmake preset and dirs
+cmake_args+=( -S "${here}" -B "${builddir}" )
+
+# Add any custom arguments to cmake
+cmake_args+=( "$@" )
+build_cmake_args+=( "$@" )
+
+mkdir -p "$builddir"
+
+rm -f "$logfile"
+touch "$logfile"
+
+if [ -n "$open_log" ]; then
+    code "$logfile"
+fi
+
+configure() {
+    if [ -n "$is_msys" ]; then
+        "${configure_cmake[@]}" "${cmake_args[@]}"
+    elif [ -n "$podman_image" ]; then
+        echo \
+            "cd '${here}' && " \
+            "${configure_cmake[@]} $(printf "'%s' " "${cmake_args[@]}")" \
+            | podman "${podman_args[@]}"
+    else
+        "${configure_cmake[@]}" "${cmake_args[@]}"
+    fi
+}
+
+build() {
+    if [ -n "$is_msys" ]; then
+        "${build_cmake[@]}" "${builddir}" "${build_cmake_args[@]}"
+    elif [ -n "$podman_image" ]; then
+        echo \
+            "cd '${here}' && " \
+            "${build_cmake[@]} '${builddir}' ${build_cmake_args[@]} && echo 'Done.' " \
+            | podman "${podman_args[@]}"
+    else
+        "${build_cmake[@]}" "${builddir}" "${build_cmake_args[@]}"
+    fi
+}
+
+if [ -n "$do_configure" ]; then
+    configure 2>&1 | tee "$logfile"
+else
+    build 2>&1 | tee "$logfile"
+fi

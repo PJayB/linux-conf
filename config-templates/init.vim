@@ -28,7 +28,7 @@ Plug 'tpope/vim-sensible'
 Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 Plug 'kyazdani42/nvim-web-devicons'
 
-Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
+"Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
 
 " Need to install 'sudo apt install --yes -- python3-venv' for this to work
 Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
@@ -80,8 +80,8 @@ vnoremap <S-Up> <Up>
 inoremap <C-s> <cmd>:w<CR><ESC>
 nnoremap <C-s> <cmd>:w<CR>
 
-" Rebind ESC to other keys for convenience
+" 'kj' backs out into normal mode
 inoremap kj <esc>
 vnoremap kj <esc>
-cnoremap kj <C-C>
+cnoremap kj <C-c><C-c>
 
