@@ -1,0 +1,31 @@
+#!/bin/bash
+origin="$1"
+branch="$2"
+if [ -n "$origin" ] && [ -z "$branch" ]; then
+    branch="$origin"
+    origin="origin"
+fi
+if [ -z "$origin" ] || [ -z "$branch" ]; then
+    echo "Usage: $0 <origin> <branch>" >&2
+    exit 1
+fi
+
+files=$(git status -s)
+if [ -n "$files" ]; then
+    echo "Here's the status of your working tree:"
+    git status | head -n 15
+    echo "Press any key to erase and checkout $origin/$branch..."
+    read -n 1
+    git reset HEAD .
+    git checkout .
+fi
+
+set -e
+echo "Checkout..."
+git checkout "$branch"
+echo "Resetting..."
+git reset --hard "$origin/$branch"
+echo "Updating submodules..."
+git submodule update --init --recursive
+echo "New status:"
+git status

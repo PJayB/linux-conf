@@ -1,0 +1,15 @@
+unset backup
+set tabsize 4
+set tabstospaces
+set smarthome
+#set fill 80
+set guidestripe 81
+set autoindent
+set linenumbers
+#set mouse
+set trimblanks
+set constantshow
+set indicator
+set minibar
+set suspendable
+

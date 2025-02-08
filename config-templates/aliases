@@ -1,0 +1,17 @@
+#!/bin/bash
+
+alias tailf="tail -f"
+alias debug="gdb -ex=r --args"
+alias rless="less -R"
+alias git-branch="git rev-parse --abbrev-ref HEAD"
+alias Rgrep="grep -RIsin --exclude-dir=.git"
+alias bc='bc -l'
+
+if [ "$(uname)" = "Darwin" ]; then
+    alias ll="ls -alhG"
+    alias xclip="xclip"
+else
+    alias ll="ls -alh --color=auto"
+    alias xclip="xclip -selection c"
+fi
+

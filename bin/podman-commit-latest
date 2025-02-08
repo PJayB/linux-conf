@@ -1,0 +1,10 @@
+#!/bin/bash
+die() { echo "$*" >&2 ; exit 1 ; }
+
+image_name="$1"
+[ -n "$image_name" ] || die "Usage: $0 <image-name>"
+
+last_container="$(podman ps --filter "ancestor=localhost/$image_name" --latest --quiet)"
+[ -n "$last_container" ] || die "No container found using image $image_name"
+
+podman container commit "$last_container" "$image_name"

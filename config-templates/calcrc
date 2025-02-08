@@ -1,0 +1,5 @@
+global KB = 1024
+global MB = KB*1024
+global GB = MB*1024
+global TB = GB*1024
+

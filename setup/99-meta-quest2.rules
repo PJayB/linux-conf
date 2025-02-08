@@ -1,0 +1,10 @@
+# Get the Quest 2 working on Linux
+
+# Add current user to plugdev group: sudo usermod -aG plugdev "$USER"
+
+# Put this file in /etc/udev/rules.d
+# Then do:
+# sudo udevadm control --reload-rules
+
+SUBSYSTEM=="usb", ATTR{idVendor}=="2833", ATTR{idProduct}=="0186", MODE="0666", GROUP="plugdev"
+

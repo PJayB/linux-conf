@@ -1,0 +1,20 @@
+#!/bin/bash
+
+here="$(pwd)"
+
+podman_run=(
+    podman
+    run
+    "-v${here}:${here}"
+)
+
+cd_then_pipe() {
+    echo "cd '${here}'"
+    cat
+}
+
+if [ -t 0 ]; then
+    "${podman_run[@]}" -it "$@" /bin/sh -c "cd '${here}' && /bin/bash -l"
+else
+    cd_then_pipe | "${podman_run[@]}" -i "$@" "/bin/bash" -l
+fi

@@ -1,0 +1,63 @@
+# Essentials
+#playerctl           | apt-get !wsl
+#patchelf            | apt-get
+#debootstrap         | apt-get
+#schroot             | apt-get
+#net-tools           | apt-get
+#ethtool             | apt-get
+sponge              | apt-get         !wsl !rpi !arm
+git                 | apt-get yum dnf pacman brew
+#git-gui             | apt-get yum dnf        brew
+git-lfs             | apt-get yum dnf pacman brew !wsl
+wget                | apt-get yum dnf pacman brew
+curl                | apt-get yum dnf pacman brew
+#tmux                | apt-get yum dnf pacman brew
+#screen              | apt-get yum dnf
+#python3-pip         | apt-get yum dnf
+#python3-venv        | apt-get yum dnf
+#gdb                 | apt-get yum dnf
+#binutils            | apt-get yum dnf
+#gcc                 | apt-get yum dnf
+#g++                 | apt-get yum dnf
+#make                | apt-get yum dnf        brew
+#cmake               | apt-get yum dnf
+nano                | apt-get yum dnf pacman brew
+#zsh                 | apt-get yum dnf pacman
+#zip                 | apt-get yum dnf pacman
+#openssh-server      | apt-get yum dnf
+#openssh             |                 pacman
+#arandr              | apt-get
+xclip               | apt-get yum dnd pacman &xorg
+#linux-tools-common  | apt-get                       !rpi !wsl !arm
+#tweak               | apt-get
+#apcalc              | apt-get
+#htop                | apt-get
+#trash-cli           | apt-get
+#p7zip               | apt-get     dnf pacman brew 
+#p7zip-full          | apt-get yum
+#p7zip-plugins       | yum dnf
+#epel-release        | yum
+#perf                | yum dnf
+#neovim              | apt-get yum dnf pacman
+#glx-utils           | yum
+#mesa-demos          | yum
+
+# Debian stuff
+apt-find            | apt-get                       !rpi !wsl !arm
+apt-file            | apt-get
+#build-essential     | apt-get
+#dconf-editor        | apt-get
+#gnome-tweak-tool    | apt-get                       !rpi !wsl
+
+# Dumb stuff
+#ddate               | apt-get
+#lolcat              | apt-get
+#cmatrix             | apt-get
+#cowsay              | apt-get
+#toilet              | apt-get
+#espeak              | apt-get
+
+# Eon stuff
+#fzf                 | apt-get !wsl
+#tree                | apt-get
+

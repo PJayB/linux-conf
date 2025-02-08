@@ -1,0 +1,4 @@
+#!/bin/bash
+git status | grep "both modified:" | sed -r 's/^.*both modified:[ \t]+//g'
+
+

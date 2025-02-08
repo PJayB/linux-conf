@@ -1,0 +1,8 @@
+set disassembly-flavor intel
+set confirm on
+set logging file ~/.gdblog
+set print symbol-filename
+set print pretty
+set print address
+set pagination off
+

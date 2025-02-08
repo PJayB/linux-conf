@@ -1,0 +1,30 @@
+[color]
+    ui = auto
+[init]
+	defaultBranch = main
+
+[diff]
+    tool = bc4
+[difftool]
+    prompt = false
+[difftool "bc4"]
+    cmd = bcompare "$LOCAL" "$REMOTE"
+    #cmd = \"c:/program files/beyond compare 3/bcomp.exe\" "$(cygpath -w $LOCAL)" "$REMOTE"
+[merge]
+    tool = bc4
+[mergetool]
+    prompt = false
+[mergetool "bc4"]
+    #trustExitCode = true
+    #cmd = \"c:/program files/beyond compare 3/bcomp.exe\" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+    cmd = bcompare "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+
+[pull]
+	rebase = false
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[gui]
+	gcwarning = false
