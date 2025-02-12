@@ -44,18 +44,20 @@ export PATH="$HOME/.local/bin:$GOPATH/bin:$toolsdir:$PATH"
 # Set up aliases
 source "$configdir/aliases"
 
-# NOTE: must be at the end (aborts here if not interactive)
-[[ $- != *i* ]] && return
-TMUXBIN=$(which tmux 2>/dev/null)
-if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
-    ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
-    if [[ -z "$ID" ]] ;then # if not available create a new one
-        exec tmux new-session
-    else
-        exec tmux attach-session -t "$ID" # if available attach to it
+# Only do TMUX in interactive mode
+if [[ $- == *i* ]]; then
+    TMUXBIN=$(which tmux 2>/dev/null)
+    if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
+        ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
+        if [[ -z "$ID" ]] ;then # if not available create a new one
+            exec tmux new-session
+        else
+            exec tmux attach-session -t "$ID" # if available attach to it
+        fi
     fi
 fi
 
+# Set prompt
 if [ "$(ls -di /)" != "2 /" ]; then
     container_name="container"
     [ -x /usr/bin/lsb_release ] && container_name="$(lsb_release -cs)"
