@@ -10,7 +10,8 @@ find_binary() {
         "$binary"
         "/usr/bin/$binary"
         "/bin/$binary"
-        "$(which "$binary" 1>/dev/null 2>&1 || :)"
+        "$(which "$binary" 2>/dev/null || :)"
+        "$(realpath "$binary" 2>/dev/null || :)"
     )
     for binary in "${tries[@]}"; do
         if [ -n "$binary" ] && [ -f "$binary" ] && [ -x "$binary" ]; then
@@ -37,7 +38,8 @@ should_configure() {
     fi
 
     if [ -n "$binary" ]; then
-        if ! find_binary "$binary"; then
+        binaryfp="$(find_binary "$binary" || :)"
+        if [ -z "$binaryfp" ]; then
             echo "Skipping '$dstfile' without '$binary'" >&2
             return 1
         fi
