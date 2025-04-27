@@ -1,0 +1,95 @@
+#!/bin/bash
+die() {
+  echo "$1" >&2
+  exit 1
+}
+
+force_overwrite=
+do_operation=
+preserve=
+
+while getopts ":h:?:l:u:f:p" opt; do
+  case $opt in
+    l)  do_operation=lock ;;
+    u)  do_operation=unlock ;;
+    f)  force_overwrite=1 ;;
+    p)  preserve=1 ;;
+    h|\?)
+        echo "Usage: $0 [-u|-l] [-f] <file>"
+        exit 0
+        ;;
+    *)  break ;;
+  esac
+  shift
+done
+
+# Detect the filename
+if [ -z "$1" ]; then
+  echo "Usage: $0 <file>"
+  exit 1
+fi
+if [ ! -f "$1" ]; then
+  echo "$1: not a file" >&2
+  exit 1
+fi
+
+# Auto detect the operation
+if [ -z "$do_operation" ]; then
+  if [[ "$1" == *.gpg ]]; then
+    do_operation=unlock
+  else
+    do_operation=lock
+  fi
+fi
+case "$do_operation" in
+  lock|unlock) ;;
+  *) die "Invalid operation: $do_operation" ;;
+esac
+
+set -eo pipefail
+
+# Read the passphrase from the user
+read -sp "Enter passphrase: " passphrase
+echo
+if [ -z "$passphrase" ]; then
+  die "Passphrase cannot be empty"
+fi
+
+# If it ends in .gpg, decrypt it
+if [ "$do_operation" == "unlock" ]; then
+  # Remove .gpg extension
+  filename="${1%.gpg}"
+  # Check if the file exists
+  if [ -z "$force_overwrite" ] && [ -f "$filename" ]; then
+      die "$filename: already exists"
+  fi
+
+  # Decrypt the file
+  gpg --batch --quiet --pinentry-mode loopback --passphrase "$passphrase" --decrypt "$1" > "$filename" || die "Failed to decrypt $1"
+  # Remove the encrypted file
+  if [ -z "$preserve" ]; then
+    rm "$1" || die "Failed to remove $1"
+  fi
+else
+  # Prompt again for the passphrase
+  read -sp "Enter passphrase again: " passphrase2
+  echo
+  if [ "$passphrase" != "$passphrase2" ]; then
+    die "Passphrases don't match"
+  fi
+
+  gpg_file="${1}.gpg"
+  # Check if the file exists
+  if [ -z "$force_overwrite" ] && [ -f "$gpg_file" ]; then
+    die "$gpg_file: already exists"
+  else
+    # Move it out of the way
+    rm -f "$gpg_file" || :
+  fi
+  # Encrypt the file
+  gpg --batch --quiet --pinentry-mode loopback --passphrase "$passphrase" --output "$gpg_file" --symmetric "$1" || die "Failed to encrypt $1"
+  # Remove the unencrypted file
+  if [ -z "$preserve" ]; then
+    rm "$1" || die "Failed to remove $1"
+  fi
+fi

@@ -4,7 +4,7 @@ f="$1"
 set -e
 
 listing="ls -alh --color"
-open="more"
+open="less"
 other="file"
 
 if [ -h "$1" ]; then
