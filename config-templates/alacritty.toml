@@ -1,0 +1,33 @@
+save_to_clipboard = true
+
+[cursor]
+blink_interval = 666
+
+[cursor.style]
+blinking = "Always"
+shape = "Beam"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 10.0
+
+[mouse]
+hide_when_typing = true
+
+[scrolling]
+history = 100000
+
+[terminal.shell]
+args = ["--login"]
+program = "/bin/bash"
+
+[window]
+decorations = "full"
+opacity = 0.9
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[terminal]

@@ -65,7 +65,7 @@ copy_config() {
 # Set up app configs
 #
 srcconfigdir="$here/../config-templates"
-copy_config "${srcconfigdir}/alacritty.yml" "$HOME/.config/alacritty/alacritty.yml" "alacritty" || :
+copy_config "${srcconfigdir}/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml" "alacritty" || :
 copy_config "${srcconfigdir}/calcrc" "$HOME/.calcrc" "calc" || :
 copy_config "${srcconfigdir}/gdbinit" "$HOME/.gdbinit" "gdb" || :
 copy_config "${srcconfigdir}/gitconfig" "$HOME/.gitconfig" "git" || :
