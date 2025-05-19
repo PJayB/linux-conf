@@ -15,3 +15,6 @@ else
     alias xclip="xclip -selection c"
 fi
 
+if ! which code >/dev/null 2>&1; then
+    alias code="flatpak run com.visualstudio.code"
+fi
