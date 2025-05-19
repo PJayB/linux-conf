@@ -2,10 +2,12 @@
 
 here="$(pwd)"
 
+# SELinux requires :z, but not sure what this will do on non-SELinux configs.
+# `sestatus` to check this.
 podman_run=(
     podman
     run
-    "-v${here}:${here}"
+    "-v${here}:${here}:z"
 )
 
 cd_then_pipe() {
