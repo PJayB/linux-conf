@@ -6,6 +6,7 @@ package_manager() {
       echo "brew"
   else
       declare -A osInfo;
+      osInfo[/usr/bin/rpm-ostree]=rpm-ostree
       osInfo[/etc/redhat-release]=yum
       osInfo[/etc/arch-release]=pacman
       osInfo[/etc/gentoo-release]=emerge
@@ -18,6 +19,7 @@ package_manager() {
       do
           if [[ -f $f ]];then
               packageMgr=${osInfo[$f]}
+              break
           fi
       done
       echo $packageMgr
@@ -55,7 +57,7 @@ if uname -r | grep -i "Microsoft"; then
 fi
 
 # Only install gui apps on syskems with xorg on it
-if [ ! -e "/usr/bin/Xorg" ]; then
+if [ ! -e "/usr/bin/Xorg" ] && [ -z "$DISPLAY" ]; then
   filters+=('&xorg')
 fi
 
@@ -80,7 +82,12 @@ elif [ "$PKGMAN" = "pacman" ]; then
     sudo $PKGMAN -Suy --needed --noconfirm "${PACKAGES[@]}"
 elif [ "$PKGMAN" = "brew" ]; then
     $PKGMAN install "${PACKAGES[@]}"
+elif [ "$PKGMAN" = "rpm-ostree" ]; then
+    "$PKGMAN" install --apply-live --idempotent --assumeyes "${PACKAGES[@]}"
 else
-    echo "$PKGMAN-based distros aren't supported."
+    echo "Can't auto-install for $PKGMAN-based distros. Would install:" >&2
+    for i in "${PACKAGES[@]}" ; do
+        echo "  $i"
+    done
     exit 1
 fi
