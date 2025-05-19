@@ -1,0 +1,20 @@
+# Set prompt
+container_str=
+append_str() {
+  if [ -n "$container_str" ]; then
+    container_str="${container_str} ${1}"
+  else
+    container_str="${1}"
+  fi
+}
+
+[ "$(ls -di /)" != "2 /" ] && append_str "chroot"
+[ -n "$container" ] && append_str "${container}"
+[ -x /usr/bin/lsb_release ] && append_str "$(lsb_release -is)"
+[ -n "$MINGW_CHOST" ] && append_str "${MINGW_CHOST}"
+[ -n "$FLATPAK_ID" ] && append_str "${FLATPAK_ID}"
+[ -n "$SNAP_NAME" ] && append_str "${SNAP_NAME}"
+
+if [ -n "$container_str" ]; then
+  PS1="(${container_str}) $PS1"
+fi

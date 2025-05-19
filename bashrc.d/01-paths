@@ -1,0 +1,10 @@
+# Set up paths
+setupdir="$HOME/.local/linux-conf"
+toolsdir="$setupdir/bin"
+configdir="$setupdir/config-templates"
+
+# Gopath to avoid cluttering up ~
+export GOPATH="$HOME/.local/go"
+
+# Export PATH to toolsdir
+export PATH="$HOME/.local/bin:$GOPATH/bin:$toolsdir:$PATH"

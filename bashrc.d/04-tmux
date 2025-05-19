@@ -1,0 +1,19 @@
+# Only do TMUX in interactive mode
+if [[ $- == *i* ]]; then
+    if [ -z "$NOTMUX" ]; then
+        # Skip TMUX in VSCode
+        if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+            NOTMUX=1
+        fi
+    fi
+
+    TMUXBIN=$(which tmux 2>/dev/null)
+    if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
+        ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
+        if [[ -z "$ID" ]] ;then # if not available create a new one
+            exec tmux new-session
+        else
+            exec tmux attach-session -t "$ID" # if available attach to it
+        fi
+    fi
+fi

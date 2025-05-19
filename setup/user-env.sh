@@ -74,15 +74,24 @@ copy_config "${srcconfigdir}/nanorc" "$HOME/.nanorc" "nano" || :
 copy_config "${srcconfigdir}/tmux.conf" "$HOME/.tmux.conf" "tmux" || :
 
 #
+# Copy .bashrc.d files
+#
+mkdir -p "$HOME/.bashrc.d"
+srcbashrcdir="$here/../bashrc.d"
+for srcfile in "$srcbashrcdir"/* ; do
+    dstfile="$HOME/.bashrc.d/$(basename "$srcfile")"
+    copy_config "$srcfile" "$dstfile" || :
+done
+
+#
 # Set up bashrc
 #
 bashrc="$HOME/.bashrc"
 
-if ! grep -Eq 'basics-setup' "${bashrc}" 2>/dev/null; then
+if ! grep -q -e 'basics-setup' -e ".bashrc.d" "${bashrc}" 2>/dev/null ; then
     echo "Configuring bashrc"
     echo "# basics-setup" >> "${bashrc}"
     echo ". $(pwd)/config-templates/bashrc" >> "${bashrc}"
-    echo ". $(pwd)/config-templates/aliases" >> "${bashrc}"
 else
     echo "bashrc already configured"
 fi
