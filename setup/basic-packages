@@ -1,4 +1,5 @@
 # Essentials
+less                | pacman
 #playerctl           | apt-get !wsl
 #patchelf            | apt-get
 #debootstrap         | apt-get
