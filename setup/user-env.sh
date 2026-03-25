@@ -91,7 +91,7 @@ bashrc="$HOME/.bashrc"
 if ! grep -q -e 'basics-setup' -e ".bashrc.d" "${bashrc}" 2>/dev/null ; then
     echo "Configuring bashrc"
     echo "# basics-setup" >> "${bashrc}"
-    echo ". $(pwd)/config-templates/bashrc" >> "${bashrc}"
+    echo ". ${srcconfigdir}/bashrc" >> "${bashrc}"
 else
     echo "bashrc already configured"
 fi
