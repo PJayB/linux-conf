@@ -205,6 +205,9 @@ echo "Creating filesystems..."
 mkfs.fat -F32 "$BOOTPART"
 mkswap "$CRYPTSWAP"
 
+SWAPFSUID="$(blkid -s UUID -o value "$CRYPTSWAP")"
+[ -n "$SWAPFSUID" ] || die "Couldn't determine UUID of swap filesystem in $CRYPTSWAP"
+
 #
 # Create btrfs filesystem and subvolumes
 #
@@ -281,7 +284,11 @@ sed -r "s/^(HOOKS=.*)$/#\1\n${NEW_HOOKS}/g" "$MKINITCPIOCONF_OLD" > \
   "$MKINITCPIOCONF"
 
 #
-# Get UUID of the luks partition
+# Get UUID of the luks partitions (used in rd.luks.name= and crypttab)
+# Note: SWAPFSUID (the swap filesystem UUID inside the LUKS container) is
+# captured separately after mkswap, and used for resume= so that
+# systemd-hibernate-resume can find the swap by UUID regardless of dm device
+# ordering.
 #
 LUKSUUID="$(blkid -s UUID -o value "$LUKSPART")"
 [ -n "$LUKSUUID" ] || die "Couldn't determine UUID of $LUKSPART"
@@ -303,7 +310,7 @@ mkdir -p "$CHROOT_BOOT/loader/entries"
   echo "linux   /$KERNEL_FILE"
   [ -n "$UCODE_INITRD_LINE" ] && echo "$UCODE_INITRD_LINE"
   echo "initrd  /$INITRAMFS_FILE"
-  echo "options rd.luks.name=${SWAPUUID}=${CRYPTSWAP_NAME} rd.luks.name=${LUKSUUID}=${CRYPTROOT_NAME} root=${CRYPTROOT} rootflags=subvol=@ resume=${CRYPTSWAP} rw"
+  echo "options rd.luks.name=${SWAPUUID}=${CRYPTSWAP_NAME} rd.luks.name=${LUKSUUID}=${CRYPTROOT_NAME} root=${CRYPTROOT} rootflags=subvol=@ resume=UUID=${SWAPFSUID} rw"
   echo ""
 } > "$CHROOT_BOOT/loader/entries/manjaro.conf"
 
