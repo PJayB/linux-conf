@@ -238,9 +238,13 @@ basestrap "${CHROOT_ROOT}" base "$KERNEL_PKG" linux-firmware btrfs-progs \
 #
 UCODE_INITRD_LINE=""
 if grep -qi "GenuineIntel" /proc/cpuinfo; then
-  echo "Intel CPU detected — installing intel-ucode..."
+  echo "Installing intel-ucode..."
   basestrap "${CHROOT_ROOT}" intel-ucode
   UCODE_INITRD_LINE="initrd  /intel-ucode.img"
+elif grep -qi "AuthenticAMD" /proc/cpuinfo; then
+  echo "Installing amd-ucode..."
+  basestrap "${CHROOT_ROOT}" amd-ucode
+  UCODE_INITRD_LINE="initrd  /amd-ucode.img"
 fi
 
 #
