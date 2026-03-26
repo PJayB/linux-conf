@@ -233,6 +233,24 @@ basestrap "${CHROOT_ROOT}" base "$KERNEL_PKG" linux-firmware btrfs-progs \
   systemd systemd-ukify networkmanager vim nano wget curl sudo openssh rsync \
   less
 
+#
+# Conditionally install intel-ucode if running on Intel CPU
+#
+UCODE_INITRD_LINE=""
+if grep -qi "GenuineIntel" /proc/cpuinfo; then
+  echo "Intel CPU detected — installing intel-ucode..."
+  basestrap "${CHROOT_ROOT}" intel-ucode
+  UCODE_INITRD_LINE="initrd  /intel-ucode.img"
+fi
+
+#
+# Conditionally install linux-headers if the package exists for this kernel
+#
+KERNEL_HEADERS_PKG="${KERNEL_PKG}-headers"
+if pacman -Si "$KERNEL_HEADERS_PKG" &>/dev/null; then
+  echo "Installing ${KERNEL_HEADERS_PKG}..."
+  basestrap "${CHROOT_ROOT}" "$KERNEL_HEADERS_PKG"
+fi
 
 echo "Configuring..."
 
@@ -271,11 +289,14 @@ INITRAMFS_FILE="$(basename "$(ls "$CHROOT_BOOT"/initramfs-* | head -1)")"
 [ -n "$INITRAMFS_FILE" ] || die "Could not find initramfs in $CHROOT_BOOT"
 
 mkdir -p "$CHROOT_BOOT/loader/entries"
-echo "title   Manjaro
-linux   /$KERNEL_FILE
-initrd  /$INITRAMFS_FILE
-options rd.luks.name=${SWAPUUID}=${CRYPTSWAP_NAME} rd.luks.name=${LUKSUUID}=${CRYPTROOT_NAME} root=${CRYPTROOT} rootflags=subvol=@ resume=${CRYPTSWAP} rw
-" > "$CHROOT_BOOT/loader/entries/manjaro.conf"
+{
+  echo "title   Manjaro"
+  echo "linux   /$KERNEL_FILE"
+  [ -n "$UCODE_INITRD_LINE" ] && echo "$UCODE_INITRD_LINE"
+  echo "initrd  /$INITRAMFS_FILE"
+  echo "options rd.luks.name=${SWAPUUID}=${CRYPTSWAP_NAME} rd.luks.name=${LUKSUUID}=${CRYPTROOT_NAME} root=${CRYPTROOT} rootflags=subvol=@ resume=${CRYPTSWAP} rw"
+  echo ""
+} > "$CHROOT_BOOT/loader/entries/manjaro.conf"
 
 #
 # Configure loader.conf
