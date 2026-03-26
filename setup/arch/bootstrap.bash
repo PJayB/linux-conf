@@ -66,6 +66,14 @@ KERNEL_PKG="$(pacman -Q linux | cut -d' ' -f1)"
 SWAPSIZE="$(awk '/MemTotal/ { print int(($2 + 1048575) / 1048576) }' \
   /proc/meminfo)"
 
+# Detect ucode, if any
+UCODE=""
+if grep -qi "GenuineIntel" /proc/cpuinfo; then
+  UCODE=intel-ucode
+elif grep -qi "AuthenticAMD" /proc/cpuinfo; then
+  UCODE=amd-ucode
+fi
+
 CRYPTSWAP_NAME=cryptswap
 CRYPTSWAP="/dev/mapper/${CRYPTSWAP_NAME}"
 
@@ -88,6 +96,7 @@ echo "Creating ${SWAPSIZE}G swap partition"
 echo "Creating user '$NEW_USER'"
 echo "Hostname '$NEW_HOSTNAME'"
 echo "Kernel: $KERNEL_PKG"
+echo "ucode: $UCODE"
 
 echo
 read -n 1 -s -r -p "Press any key to continue..."
@@ -237,14 +246,10 @@ basestrap "${CHROOT_ROOT}" base "$KERNEL_PKG" linux-firmware btrfs-progs \
 # Conditionally install intel-ucode if running on Intel CPU
 #
 UCODE_INITRD_LINE=""
-if grep -qi "GenuineIntel" /proc/cpuinfo; then
-  echo "Installing intel-ucode..."
-  basestrap "${CHROOT_ROOT}" intel-ucode
-  UCODE_INITRD_LINE="initrd  /intel-ucode.img"
-elif grep -qi "AuthenticAMD" /proc/cpuinfo; then
-  echo "Installing amd-ucode..."
-  basestrap "${CHROOT_ROOT}" amd-ucode
-  UCODE_INITRD_LINE="initrd  /amd-ucode.img"
+if [ -n "$UCODE" ]; then
+  echo "Installing $UCODE..."
+  basestrap "${CHROOT_ROOT}" "$UCODE"
+  UCODE_INITRD_LINE="initrd  /$UCODE.img"
 fi
 
 #
