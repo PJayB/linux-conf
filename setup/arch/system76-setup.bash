@@ -29,7 +29,7 @@ sudo -u "$SUDO_USER" paru -S --noconfirm \
   system76-power \
   system76-firmware-daemon
 
-systemctl enable --now system76-power
+systemctl enable --now com.system76.PowerDaemon
 systemctl enable --now system76-firmware-daemon
 
 #
