@@ -1,12 +1,5 @@
-# Only do TMUX in interactive mode
-if [[ $- == *i* ]]; then
-    if [ -z "$NOTMUX" ]; then
-        # Skip TMUX in VSCode
-        if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-            NOTMUX=1
-        fi
-    fi
-
+# Only do TMUX in interactive mode inside a DE
+if [[ $- == *i* ]] && [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ]; then
     TMUXBIN=$(which tmux 2>/dev/null)
     if [ -z "$NOTMUX" ] && [ -n "$TMUXBIN" ] && [ -x "$TMUXBIN" ] && [[ -z "$TMUX" ]] ; then
         ID="$( tmux ls | grep -vm1 attached | cut -d: -f1 )" # get the id of a deattached session
