@@ -1,4 +1,6 @@
 #!/bin/bash
+# Source: https://support.system76.com/articles/system76-software/
+# Source: https://support.system76.com/articles/system76-driver/
 # Post-install setup for System76 Lemur Pro (lemp10) on Manjaro/Arch.
 # Run as root after first boot:  sudo bash system76-setup.bash
 set -euo pipefail
@@ -25,10 +27,16 @@ id "$SUDO_USER" &>/dev/null || die "User '$SUDO_USER' not found"
 #
 echo "Installing System76 packages..."
 sudo -u "$SUDO_USER" paru -S --noconfirm \
-  system76-acpi-dkms \
+  system76-firmware-daemon \
+  system76-firmware \
+  firmware-manager \
   system76-power \
-  system76-firmware-daemon
+  system76-driver \
+  system76-dkms \
+  system76-acpi-dkms \
+  system76-io-dkms
 
+systemctl enable --now system76
 systemctl enable --now com.system76.PowerDaemon
 systemctl enable --now system76-firmware-daemon
 
