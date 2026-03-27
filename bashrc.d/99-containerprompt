@@ -8,7 +8,14 @@ append_str() {
   fi
 }
 
-[ "$(ls -di /)" != "2 /" ] && append_str "chroot"
+[ /proc/1/root -ef / ] || append_str "chroot"
+if [ -f /run/.containerenv ]; then
+  append_str "podman"
+elif [ -f /.dockerenv ]; then
+  append_str "docker"
+elif [ -z "$container" ] && grep -qE '\b(lxc|lxd)\b' /proc/self/cgroup 2>/dev/null; then
+  append_str "lxc"
+fi
 [ -n "$container" ] && append_str "${container}"
 [ -x /usr/bin/lsb_release ] && append_str "$(lsb_release -is)"
 [ -n "$MINGW_CHOST" ] && append_str "${MINGW_CHOST}"
