@@ -8,7 +8,6 @@ append_str() {
   fi
 }
 
-[ /proc/1/root -ef / ] || append_str "chroot"
 if [ -f /run/.containerenv ]; then
   append_str "podman"
 elif [ -f /.dockerenv ]; then
@@ -17,7 +16,12 @@ elif [ -z "$container" ] && grep -qE '\b(lxc|lxd)\b' /proc/self/cgroup 2>/dev/nu
   append_str "lxc"
 fi
 [ -n "$container" ] && append_str "${container}"
-[ -x /usr/bin/lsb_release ] && append_str "$(lsb_release -is)"
+if command -v lsb_release >/dev/null ; then
+  lsbr="$(lsb_release -is)"
+  if [ "$lsbr" != "n/a" ] && [ -n "$lsbr" ]; then
+    append_str "$lsbr"
+  fi
+fi
 [ -n "$MINGW_CHOST" ] && append_str "${MINGW_CHOST}"
 [ -n "$FLATPAK_ID" ] && append_str "${FLATPAK_ID}"
 [ -n "$SNAP_NAME" ] && append_str "${SNAP_NAME}"
