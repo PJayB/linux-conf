@@ -243,7 +243,7 @@ echo "Bootstrapping..."
 
 basestrap "${CHROOT_ROOT}" base "$KERNEL_PKG" linux-firmware btrfs-progs \
   systemd systemd-ukify networkmanager vim nano wget curl sudo openssh rsync \
-  less git
+  less git man-db
 
 #
 # Conditionally install intel-ucode if running on Intel CPU
