@@ -44,6 +44,11 @@ echo "Installing audio DSP fix..."
 sudo -u "$SUDO_USER" paru -S --noconfirm gpd-pocket-4-pipewire
 
 #
+# Install power manager
+#
+pacman -S --needed power-profiles-manager
+
+#
 # Done
 #
 echo
