@@ -92,7 +92,8 @@ PKGS=(
   steam gamemode lib32-gamemode
 
   # Fonts
-  noto-fonts noto-fonts-emoji ttf-liberation
+  noto-fonts noto-fonts-emoji ttf-liberation ttc-iosevka
+  ttf-nerd-fonts-symbols-mono
 
   # Browser
   firefox
