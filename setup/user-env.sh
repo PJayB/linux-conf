@@ -71,12 +71,12 @@ copy_config "${srcconfigdir}/gdbinit" "$HOME/.gdbinit" "gdb" || :
 copy_config "${srcconfigdir}/gitconfig" "$HOME/.gitconfig" "git" || :
 copy_config "${srcconfigdir}/helix-config.toml" "$HOME/.config/helix/config.toml" "hx" || :
 copy_config "${srcconfigdir}/nanorc" "$HOME/.nanorc" "nano" || :
-
-
-niri_cfg="${srcconfigdir}/niri/config.$(cat /etc/hostname).kdl"
-if [ -f "$niri_cfg" ]; then
+# niri: per-machine config.<hostname>.kdl, which includes the shared common.kdl
+niri_cfg="${srcconfigdir}/niri/config.$(uname -n).kdl"
+if [ ! -f "$niri_cfg" ]; then
     niri_cfg="${srcconfigdir}/niri/config.lemur-pro.kdl"
 fi
+copy_config "${srcconfigdir}/niri/common.kdl" "$HOME/.config/niri/common.kdl" "niri" || :
 copy_config "${niri_cfg}" "$HOME/.config/niri/config.kdl" "niri" || :
 copy_config "${srcconfigdir}/tmux.conf" "$HOME/.tmux.conf" "tmux" || :
 copy_config "${srcconfigdir}/waybar/config.jsonc" "$HOME/.config/waybar/config.jsonc" "waybar" || :
