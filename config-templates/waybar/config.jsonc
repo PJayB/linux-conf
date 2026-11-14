@@ -1,0 +1,108 @@
+// waybar config for niri. Reload: pkill -SIGUSR2 waybar
+// Icons are Nerd Font (Material Design) glyphs; generated, so edit with care.
+// Click network -> nmtui, bluetooth -> blueman, volume -> mute (right: pavucontrol).
+// Scroll volume/brightness to change them.
+{
+  "layer": "top",
+  "position": "bottom",
+  "height": 26,
+  "spacing": 0,
+  "modules-left": [
+    "niri/workspaces",
+    "niri/window"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "network",
+    "bluetooth",
+    "wireplumber",
+    "backlight",
+    "battery",
+    "tray"
+  ],
+  "niri/workspaces": {
+    "format": "{index}"
+  },
+  "niri/window": {
+    "format": "{title}",
+    "max-length": 80,
+    "separate-outputs": true
+  },
+  "clock": {
+    "format": "{:%a %d %b  %H:%M}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "left",
+      "format": {
+        "today": "<span color='#7fc8ff'><b>{}</b></span>"
+      }
+    }
+  },
+  "network": {
+    "format-wifi": "󰖩 {essid}",
+    "format-ethernet": "󰈀 wired",
+    "format-disconnected": "󰖪 offline",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr} on {ifname}",
+    "tooltip-format-ethernet": "{ipaddr} on {ifname}",
+    "on-click": "alacritty -e nmtui"
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "",
+    "format-connected": "󰂱 {device_alias}",
+    "tooltip-format-connected": "{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "blueman-manager"
+  },
+  "wireplumber": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰖁 muted",
+    "format-icons": [
+      "󰕿",
+      "󰖀",
+      "󰕾"
+    ],
+    "scroll-step": 5,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "pavucontrol"
+  },
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": [
+      "󰃞",
+      "󰃟",
+      "󰃠"
+    ],
+    "on-scroll-up": "brightnessctl set 5%+",
+    "on-scroll-down": "brightnessctl set 5%-"
+  },
+  "battery": {
+    "states": {
+      "warning": 25,
+      "critical": 10
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "format-icons": [
+      "󰁺",
+      "󰁻",
+      "󰁼",
+      "󰁽",
+      "󰁾",
+      "󰁿",
+      "󰂀",
+      "󰂁",
+      "󰂂",
+      "󰁹"
+    ],
+    "tooltip-format": "{timeTo}, {power:.1f} W"
+  },
+  "tray": {
+    "spacing": 8
+  }
+}

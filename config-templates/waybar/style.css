@@ -1,0 +1,98 @@
+/* waybar style: classic full-width dark bar, matched to the niri focus ring. */
+
+@define-color bg      #1d2021;
+@define-color bg-alt  #2a2e30;
+@define-color fg      #d4d4d4;
+@define-color dim     #7a7a7a;
+@define-color accent  #7fc8ff;
+@define-color warn    #e5c07b;
+@define-color crit    #e06c75;
+@define-color good    #98c379;
+
+* {
+    font-family: "Iosevka Nerd Font", "Symbols Nerd Font", "Iosevka", sans-serif;
+    font-size: 13px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background: @bg;
+    color: @fg;
+    border-top: 1px solid @bg-alt;
+}
+
+tooltip {
+    background: @bg;
+    border: 1px solid @accent;
+}
+tooltip label {
+    color: @fg;
+}
+
+/* Workspaces */
+#workspaces button {
+    padding: 0 9px;
+    color: @dim;
+    background: transparent;
+    box-shadow: none;
+    text-shadow: none;
+}
+#workspaces button:hover {
+    background: @bg-alt;
+    color: @fg;
+}
+#workspaces button.active {
+    color: @bg;
+    background: @accent;
+}
+#workspaces button.urgent {
+    color: @bg;
+    background: @crit;
+}
+
+#window {
+    padding: 0 12px;
+    color: @dim;
+}
+
+#clock {
+    padding: 0 12px;
+}
+
+/* Right-hand status modules */
+#network,
+#bluetooth,
+#wireplumber,
+#backlight,
+#battery,
+#tray {
+    padding: 0 10px;
+}
+
+#network.disconnected,
+#bluetooth.off,
+#wireplumber.muted {
+    color: @dim;
+}
+
+#bluetooth.connected {
+    color: @accent;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: @good;
+}
+#battery.warning:not(.charging) {
+    color: @warn;
+}
+#battery.critical:not(.charging) {
+    color: @bg;
+    background: @crit;
+}
+
+#tray > .needs-attention {
+    background: @crit;
+}

@@ -49,6 +49,9 @@ PKGS=(
 
   # Laptop hardware keys
   brightnessctl wireplumber
+
+  # GUIs opened from the bar (volume right-click, bluetooth click)
+  pavucontrol blueman
 )
 
 missing=()
