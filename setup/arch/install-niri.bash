@@ -38,8 +38,9 @@ PKGS=(
   # Locking and idle
   swaylock swayidle
 
-  # Terminal (bound to Mod+Return)
-  alacritty
+  # Terminal (bound to Mod+Return), and jq for bin/alacritty-here to parse
+  # niri's IPC output
+  alacritty jq
 
   # Keyring and polkit agent (niri does not provide one)
   gnome-keyring libsecret polkit polkit-gnome

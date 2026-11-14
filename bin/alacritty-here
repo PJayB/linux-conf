@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Opens a new alacritty in the working directory of the focused alacritty
+# window (via niri IPC), falling back to $HOME otherwise.
+#
+dir="$HOME"
+win="$(niri msg --json focused-window 2>/dev/null)" || win=""
+if [[ -n "$win" ]] && command -v jq >/dev/null && \
+   [[ "$(jq -r '.app_id // empty' <<<"$win")" == Alacritty ]]; then
+    pid="$(jq -r '.pid // empty' <<<"$win")"
+    child="$(pgrep -oP "$pid" 2>/dev/null)"
+    if [[ -n "$child" ]]; then
+        cwd="$(readlink "/proc/$child/cwd" 2>/dev/null)"
+        [[ -d "$cwd" ]] && dir="$cwd"
+    fi
+fi
+exec alacritty --working-directory "$dir" "$@"

@@ -86,7 +86,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     // Launchers
-    Mod+Return hotkey-overlay-title="Terminal" { spawn "alacritty"; }
+    Mod+Return hotkey-overlay-title="Terminal" { spawn "alacritty-here"; }
     Mod+D hotkey-overlay-title="Launcher" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "swaylock"; }
 

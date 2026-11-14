@@ -83,6 +83,15 @@ copy_config "${srcconfigdir}/waybar/config.jsonc" "$HOME/.config/waybar/config.j
 copy_config "${srcconfigdir}/waybar/style.css" "$HOME/.config/waybar/style.css" "waybar" || :
 
 #
+# Link scripts that the compositor spawns into ~/.local/bin, which is on the
+# session PATH (unlike this repo's bin/, which only bashrc adds)
+#
+if command -v niri >/dev/null; then
+    mkdir -p "$HOME/.local/bin"
+    ln -sfv "$(realpath "$here/../bin/alacritty-here")" "$HOME/.local/bin/alacritty-here"
+fi
+
+#
 # Dark mode for apps that ask the desktop portal (Firefox, GTK4/libadwaita).
 # Full DEs like COSMIC manage this themselves; bare compositors like niri don't.
 #
