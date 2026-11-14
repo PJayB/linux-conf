@@ -71,7 +71,17 @@ copy_config "${srcconfigdir}/gdbinit" "$HOME/.gdbinit" "gdb" || :
 copy_config "${srcconfigdir}/gitconfig" "$HOME/.gitconfig" "git" || :
 copy_config "${srcconfigdir}/helix-config.toml" "$HOME/.config/helix/config.toml" "hx" || :
 copy_config "${srcconfigdir}/nanorc" "$HOME/.nanorc" "nano" || :
+copy_config "${srcconfigdir}/niri/config.kdl" "$HOME/.config/niri/config.kdl" "niri" || :
 copy_config "${srcconfigdir}/tmux.conf" "$HOME/.tmux.conf" "tmux" || :
+
+#
+# Dark mode for apps that ask the desktop portal (Firefox, GTK4/libadwaita).
+# Full DEs like COSMIC manage this themselves; bare compositors like niri don't.
+#
+if command -v niri >/dev/null && command -v gsettings >/dev/null; then
+    gsettings set org.gnome.desktop.interface color-scheme prefer-dark || :
+    gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark || :
+fi
 
 #
 # Copy .bashrc.d files
