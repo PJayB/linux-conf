@@ -5,6 +5,15 @@ die() { echo "$*" >&2 ; exit 1 ; }
 
 here="$(dirname "$(realpath "$0")")"
 
+force=0
+for arg in "$@"; do
+    case "$arg" in
+        -f|--force) force=1 ;;
+        -h|--help) echo "Usage: $0 [-f|--force]  (--force overwrites existing config files)"; exit 0 ;;
+        *) die "Unknown argument: $arg" ;;
+    esac
+done
+
 find_binary() {
     local tries=(
         "$binary"
@@ -32,8 +41,8 @@ should_configure() {
         return 1
     fi
 
-    if [ -e "$dstfile" ]; then
-        echo "Skipping '$dstfile' because it exists" >&2
+    if [ -e "$dstfile" ] && [ "$force" -eq 0 ]; then
+        echo "Skipping '$dstfile' because it exists (use --force to overwrite)" >&2
         return 1
     fi
 
