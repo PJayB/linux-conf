@@ -36,7 +36,7 @@ PKGS=(
   waybar fuzzel mako swaybg
 
   # Locking and idle
-  swaylock swayidle
+  hyprlock hypridle
 
   # Terminal (bound to Mod+Return), and jq for bin/alacritty-here to parse
   # niri's IPC output

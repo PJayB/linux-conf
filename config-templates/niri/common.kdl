@@ -68,9 +68,8 @@ spawn-at-startup "waybar"
 spawn-at-startup "mako"
 spawn-at-startup "swaybg" "-c" "#1d2021"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-// Lock after 5 min idle, blank screens 30 s later, and lock before suspend
-// (lid close/suspend itself is handled by logind as usual).
-spawn-at-startup "sh" "-c" "swayidle -w timeout 300 'swaylock -f' timeout 330 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors' before-sleep 'swaylock -f'"
+// Idle locking, screen blanking and lock-before-suspend: see hypr/hypridle.conf
+spawn-at-startup "hypridle"
 
 window-rule {
     geometry-corner-radius 8
@@ -88,7 +87,7 @@ binds {
     // Launchers
     Mod+Return hotkey-overlay-title="Terminal" { spawn "alacritty-here"; }
     Mod+D hotkey-overlay-title="Launcher" { spawn "fuzzel"; }
-    Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "swaylock"; }
+    Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "sh" "-c" "pidof hyprlock || hyprlock"; }
 
     // Media and brightness keys (work on the lock screen too)
     XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"; }

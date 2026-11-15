@@ -70,6 +70,8 @@ copy_config "${srcconfigdir}/calcrc" "$HOME/.calcrc" "calc" || :
 copy_config "${srcconfigdir}/gdbinit" "$HOME/.gdbinit" "gdb" || :
 copy_config "${srcconfigdir}/gitconfig" "$HOME/.gitconfig" "git" || :
 copy_config "${srcconfigdir}/helix-config.toml" "$HOME/.config/helix/config.toml" "hx" || :
+copy_config "${srcconfigdir}/hypr/hyprlock.conf" "$HOME/.config/hypr/hyprlock.conf" "hyprlock" || :
+copy_config "${srcconfigdir}/hypr/hypridle.conf" "$HOME/.config/hypr/hypridle.conf" "hypridle" || :
 copy_config "${srcconfigdir}/nanorc" "$HOME/.nanorc" "nano" || :
 # niri: per-machine config.<hostname>.kdl, which includes the shared common.kdl
 niri_cfg="${srcconfigdir}/niri/config.$(uname -n).kdl"
