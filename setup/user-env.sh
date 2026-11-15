@@ -94,6 +94,18 @@ copy_config "${srcconfigdir}/waybar/config.jsonc" "$HOME/.config/waybar/config.j
 copy_config "${srcconfigdir}/waybar/style.css" "$HOME/.config/waybar/style.css" "waybar" || :
 
 #
+# Wallpaper: link ~/.config/wallpaper to the repo's 'wallpaper' symlink (not
+# its target), so re-pointing that symlink takes effect without re-running this
+#
+wallpaper="$(realpath "$here/..")/wallpaper"
+if [ -e "$wallpaper" ]; then
+    mkdir -p "$HOME/.config"
+    ln -sfnv "$wallpaper" "$HOME/.config/wallpaper"
+else
+    echo "Skipping wallpaper because '$wallpaper' is missing" >&2
+fi
+
+#
 # Link scripts that the compositor spawns into ~/.local/bin, which is on the
 # session PATH (unlike this repo's bin/, which only bashrc adds)
 #
