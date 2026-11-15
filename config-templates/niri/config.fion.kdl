@@ -12,3 +12,25 @@ output "eDP-1" {
 layout {
     default-column-width { proportion 0.66667; }
 }
+
+// The Pocket 4 keyboard can't reliably register Mod+<modifier>+arrow, so
+// disable every Mod+arrow bind from common.kdl to build the Mod+hjkl habit.
+// Niri has no no-op action; spawning `true` is the closest thing.
+binds {
+    Mod+Left             { spawn "true"; }
+    Mod+Down             { spawn "true"; }
+    Mod+Up               { spawn "true"; }
+    Mod+Right            { spawn "true"; }
+    Mod+Shift+Left       { spawn "true"; }
+    Mod+Shift+Down       { spawn "true"; }
+    Mod+Shift+Up         { spawn "true"; }
+    Mod+Shift+Right      { spawn "true"; }
+    Mod+Ctrl+Left        { spawn "true"; }
+    Mod+Ctrl+Down        { spawn "true"; }
+    Mod+Ctrl+Up          { spawn "true"; }
+    Mod+Ctrl+Right       { spawn "true"; }
+    Mod+Ctrl+Shift+Left  { spawn "true"; }
+    Mod+Ctrl+Shift+Down  { spawn "true"; }
+    Mod+Ctrl+Shift+Up    { spawn "true"; }
+    Mod+Ctrl+Shift+Right { spawn "true"; }
+}
