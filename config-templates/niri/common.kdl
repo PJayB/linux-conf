@@ -81,6 +81,17 @@ window-rule {
     open-floating true
 }
 
+// Steam/Proton games (X11 class steam_app_<id>, passed through by xwayland-satellite).
+// Open fullscreen so niri hides the bar; opening floating means leaving
+// fullscreen (Mod+Shift+F) drops the game back to floating at the top-left
+// instead of into the column strip.
+window-rule {
+    match app-id=r#"^steam_app_"#
+    open-fullscreen true
+    open-floating true
+    default-floating-position x=0 y=0 relative-to="top-left"
+}
+
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
