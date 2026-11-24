@@ -92,6 +92,7 @@ copy_config "${niri_cfg}" "$HOME/.config/niri/config.kdl" "niri" || :
 copy_config "${srcconfigdir}/tmux.conf" "$HOME/.tmux.conf" "tmux" || :
 copy_config "${srcconfigdir}/waybar/config.jsonc" "$HOME/.config/waybar/config.jsonc" "waybar" || :
 copy_config "${srcconfigdir}/waybar/style.css" "$HOME/.config/waybar/style.css" "waybar" || :
+copy_config "${srcconfigdir}/vimrc" "$HOME/.vimrc" "vim" || :
 
 #
 # Wallpaper: link ~/.config/wallpaper to the repo's 'wallpaper' symlink (not

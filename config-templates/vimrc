@@ -1,0 +1,9 @@
+set number
+set relativenumber
+
+set timeoutlen=300
+
+inoremap kj <Esc>
+vnoremap kj <Esc>
+cnoremap kj <C-c>
+
